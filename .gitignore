@@ -1,6 +1,9 @@
 # CI / build outputs
 dist/
 .tmp/
+build/
+build-windows/
+build-linux/
 
 # Logs and transient local artifacts
 *.log

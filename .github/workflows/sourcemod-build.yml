@@ -1,20 +1,6 @@
 name: SourceMod Build
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-    paths:
-      - .github/workflows/sourcemod-build.yml
-      - plugin-package-map.json
-      - scripts/ci-build-sourcemod.sh
-      - scripts/ci-package-release-assets.sh
-      - scripts/ci-validate-artifact.sh
-      - left4dead2/addons/sourcemod/**
-      - docs/**
-      - README.md
   workflow_dispatch:
     inputs:
       sourcemod_version:

@@ -2,8 +2,8 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/autopause.sp`
-- `left4dead2/addons/sourcemod/translations/es/autopause.phrases.txt`
+- `addons/sourcemod/scripting/autopause.sp`
+- `addons/sourcemod/translations/es/autopause.phrases.txt`
 
 ## Motivo del Override
 

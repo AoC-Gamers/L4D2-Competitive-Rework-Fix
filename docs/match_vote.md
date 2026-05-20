@@ -2,9 +2,9 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/match_vote.sp`
-- `left4dead2/addons/sourcemod/translations/match_vote.phrases.txt`
-- `left4dead2/addons/sourcemod/translations/es/match_vote.phrases.txt`
+- `addons/sourcemod/scripting/match_vote.sp`
+- `addons/sourcemod/translations/match_vote.phrases.txt`
+- `addons/sourcemod/translations/es/match_vote.phrases.txt`
 
 ## Motivo del Override
 

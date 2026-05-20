@@ -2,8 +2,8 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/l4d2_fix_team_shuffle.sp`
-- `left4dead2/addons/sourcemod/translations/l4d2_fix_team_shuffle.phrases.txt`
+- `addons/sourcemod/scripting/l4d2_fix_team_shuffle.sp`
+- `addons/sourcemod/translations/l4d2_fix_team_shuffle.phrases.txt`
 
 ## Motivo del Override
 

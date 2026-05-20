@@ -2,9 +2,9 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/caster_system.sp`
-- `left4dead2/addons/sourcemod/scripting/include/caster_system.inc`
-- `left4dead2/addons/sourcemod/translations/es/caster_system.phrases.txt`
+- `addons/sourcemod/scripting/caster_system.sp`
+- `addons/sourcemod/scripting/include/caster_system.inc`
+- `addons/sourcemod/translations/es/caster_system.phrases.txt`
 
 ## Motivo del Override
 

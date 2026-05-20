@@ -9,7 +9,7 @@ ARTIFACT_DIR="$DIST_DIR/artifact"
 SOURCEMOD_ARCHIVE_URL="${SOURCEMOD_ARCHIVE_URL:?SOURCEMOD_ARCHIVE_URL is required}"
 PACKAGE_MAP_PATH="$ROOT_DIR/plugin-package-map.json"
 
-SOURCE_ROOT="$ROOT_DIR/left4dead2/addons/sourcemod"
+SOURCE_ROOT="$ROOT_DIR/addons/sourcemod"
 SCRIPTING_DIR="$SOURCE_ROOT/scripting"
 INCLUDE_DIR="$SCRIPTING_DIR/include"
 TRANSLATIONS_DIR="$SOURCE_ROOT/translations"
@@ -25,8 +25,8 @@ SOURCEMOD_DIR="$WORK_DIR"
 SPCOMP_BIN="$SOURCEMOD_DIR/addons/sourcemod/scripting/spcomp"
 SOURCEMOD_INCLUDE_DIR="$SOURCEMOD_DIR/addons/sourcemod/scripting/include"
 COMPILE_LOG="$ARTIFACT_DIR/compile.log"
-PACKAGE_PLUGIN_DIR="$ARTIFACT_DIR/left4dead2/addons/sourcemod/plugins"
-PACKAGE_SM_DIR="$ARTIFACT_DIR/left4dead2/addons/sourcemod"
+PACKAGE_PLUGIN_DIR="$ARTIFACT_DIR/addons/sourcemod/plugins"
+PACKAGE_SM_DIR="$ARTIFACT_DIR/addons/sourcemod"
 
 mkdir -p "$PACKAGE_PLUGIN_DIR/anticheat" "$PACKAGE_PLUGIN_DIR/fixes" "$PACKAGE_PLUGIN_DIR/optional"
 : > "$COMPILE_LOG"
@@ -85,8 +85,8 @@ do
 done
 
 mkdir -p "$PACKAGE_SM_DIR"
-cp -R "$ROOT_DIR/left4dead2/addons/sourcemod/scripting" "$PACKAGE_SM_DIR/"
-cp -R "$ROOT_DIR/left4dead2/addons/sourcemod/translations" "$PACKAGE_SM_DIR/"
+cp -R "$ROOT_DIR/addons/sourcemod/scripting" "$PACKAGE_SM_DIR/"
+cp -R "$ROOT_DIR/addons/sourcemod/translations" "$PACKAGE_SM_DIR/"
 
 cp "$ROOT_DIR/README.md" "$ARTIFACT_DIR/"
 cp "$ROOT_DIR/plugin-package-map.json" "$ARTIFACT_DIR/"

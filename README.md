@@ -17,16 +17,16 @@ La idea es mantener aquí:
 
 Se replica la misma estructura esperada por SourceMod:
 
-- `left4dead2/addons/sourcemod/scripting/`
-- `left4dead2/addons/sourcemod/scripting/include/`
-- `left4dead2/addons/sourcemod/translations/`
+- `addons/sourcemod/scripting/`
+- `addons/sourcemod/scripting/include/`
+- `addons/sourcemod/translations/`
 - `docs/`
 
 Para los binarios compilados, el CI empaqueta los plugins en:
 
-- `left4dead2/addons/sourcemod/plugins/anticheat/`
-- `left4dead2/addons/sourcemod/plugins/fixes/`
-- `left4dead2/addons/sourcemod/plugins/optional/`
+- `addons/sourcemod/plugins/anticheat/`
+- `addons/sourcemod/plugins/fixes/`
+- `addons/sourcemod/plugins/optional/`
 
 `disabled/` no se gestiona desde este repo porque corresponde a una convención de despliegue de SourceMod y no a una categoría funcional del proyecto.
 
@@ -41,6 +41,35 @@ El archivo `plugin-package-map.json` define qué plugins deben salir fuera de `o
 Actualmente:
 
 - `l4d2_fix_team_shuffle` se empaqueta en `plugins/fixes/`
+
+## Build Local
+
+Targets disponibles:
+
+- `make build`
+- `make deps-windows`
+- `make build-windows`
+- `make deps-linux`
+- `make build-linux`
+- `make clean`
+- `make clean-all`
+
+Comportamiento:
+
+- `make build` delega en `make build-windows`
+- `make deps-windows` descarga el compilador de SourceMod para Windows en `.tmp/sourcemod-windows/`
+- `make build-windows` genera salida en `build-windows/`
+- `make deps-linux` descarga el compilador de SourceMod para Linux en `.tmp/sourcemod-linux/`
+- `make build-linux` genera salida en `build-linux/`
+
+Los targets `build-windows` y `build-linux` no descargan dependencias automáticamente.
+Primero hay que ejecutar el `deps-*` correspondiente.
+
+Los builds locales incluyen solo el contenido desplegable bajo:
+
+- `addons/sourcemod/plugins/`
+- `addons/sourcemod/scripting/`
+- `addons/sourcemod/translations/`
 
 ## Documentacion
 
@@ -104,12 +133,3 @@ No busca ser:
 - un paquete completo de servidor
 - una colección de plugins específicos de un proyecto privado
 - un reemplazo total del repo upstream
-
-## Pendientes detectados
-
-Hay dos plugins identificados como candidatos de esta capa que no estaban disponibles en el árbol actual al momento de consolidar el repo:
-
-- `holdout_bonus.sp`
-- `ratemonitor.sp`
-
-Si reaparecen o se recuperan desde otra fuente, deberían agregarse aquí si siguen siendo parte de los overrides competitivos mantenidos.

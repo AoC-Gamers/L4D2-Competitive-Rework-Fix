@@ -2,7 +2,7 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/l4d_tank_damage_announce.sp`
+- `addons/sourcemod/scripting/l4d_tank_damage_announce.sp`
 
 ## Motivo del Override
 

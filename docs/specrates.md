@@ -2,7 +2,7 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/specrates.sp`
+- `addons/sourcemod/scripting/specrates.sp`
 
 ## Motivo del Override
 

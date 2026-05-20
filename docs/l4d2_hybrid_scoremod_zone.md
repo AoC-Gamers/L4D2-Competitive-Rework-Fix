@@ -2,10 +2,10 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/l4d2_hybrid_scoremod_zone.sp`
-- `left4dead2/addons/sourcemod/scripting/include/l4d2_hybrid_scoremod_zone.inc`
-- `left4dead2/addons/sourcemod/translations/l4d2_hybrid_scoremod.phrases.txt`
-- `left4dead2/addons/sourcemod/translations/es/l4d2_hybrid_scoremod.phrases.txt`
+- `addons/sourcemod/scripting/l4d2_hybrid_scoremod_zone.sp`
+- `addons/sourcemod/scripting/include/l4d2_hybrid_scoremod_zone.inc`
+- `addons/sourcemod/translations/l4d2_hybrid_scoremod.phrases.txt`
+- `addons/sourcemod/translations/es/l4d2_hybrid_scoremod.phrases.txt`
 
 ## Motivo del Override
 

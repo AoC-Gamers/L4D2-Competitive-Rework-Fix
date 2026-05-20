@@ -2,10 +2,10 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/l4d2_skill_detect.sp`
-- `left4dead2/addons/sourcemod/scripting/l4d2_skill_detect/`
-- `left4dead2/addons/sourcemod/translations/l4d2_skill_detect.phrases.txt`
-- `left4dead2/addons/sourcemod/translations/es/l4d2_skill_detect.phrases.txt`
+- `addons/sourcemod/scripting/l4d2_skill_detect.sp`
+- `addons/sourcemod/scripting/l4d2_skill_detect/`
+- `addons/sourcemod/translations/l4d2_skill_detect.phrases.txt`
+- `addons/sourcemod/translations/es/l4d2_skill_detect.phrases.txt`
 
 ## Motivo del Override
 

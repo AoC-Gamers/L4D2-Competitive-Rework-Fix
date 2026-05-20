@@ -2,7 +2,7 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/l4d_votepoll_fix.sp`
+- `addons/sourcemod/scripting/l4d_votepoll_fix.sp`
 
 ## Motivo del Override
 

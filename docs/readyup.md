@@ -2,9 +2,9 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/readyup.sp`
-- `left4dead2/addons/sourcemod/scripting/readyup/`
-- `left4dead2/addons/sourcemod/scripting/include/readyup.inc`
+- `addons/sourcemod/scripting/readyup.sp`
+- `addons/sourcemod/scripting/readyup/`
+- `addons/sourcemod/scripting/include/readyup.inc`
 
 ## Motivo del Override
 

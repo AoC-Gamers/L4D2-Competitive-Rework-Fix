@@ -21,11 +21,11 @@ root_dir, artifact_dir, package_map_path = sys.argv[1], sys.argv[2], sys.argv[3]
 with open(package_map_path, "r", encoding="utf-8") as fh:
     package_map = json.load(fh)
 
-source_scripting_dir = os.path.join(root_dir, "left4dead2", "addons", "sourcemod", "scripting")
-source_translations_dir = os.path.join(root_dir, "left4dead2", "addons", "sourcemod", "translations")
-artifact_plugins_dir = os.path.join(artifact_dir, "left4dead2", "addons", "sourcemod", "plugins")
-artifact_scripting_dir = os.path.join(artifact_dir, "left4dead2", "addons", "sourcemod", "scripting")
-artifact_translations_dir = os.path.join(artifact_dir, "left4dead2", "addons", "sourcemod", "translations")
+source_scripting_dir = os.path.join(root_dir, "addons", "sourcemod", "scripting")
+source_translations_dir = os.path.join(root_dir, "addons", "sourcemod", "translations")
+artifact_plugins_dir = os.path.join(artifact_dir, "addons", "sourcemod", "plugins")
+artifact_scripting_dir = os.path.join(artifact_dir, "addons", "sourcemod", "scripting")
+artifact_translations_dir = os.path.join(artifact_dir, "addons", "sourcemod", "translations")
 
 expected_plugins = sorted(
     os.path.splitext(entry)[0]

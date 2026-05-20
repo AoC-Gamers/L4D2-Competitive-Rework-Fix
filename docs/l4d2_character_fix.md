@@ -2,7 +2,7 @@
 
 ## Plugin
 
-- `left4dead2/addons/sourcemod/scripting/l4d2_character_fix.sp`
+- `addons/sourcemod/scripting/l4d2_character_fix.sp`
 
 ## Motivo del Override
 

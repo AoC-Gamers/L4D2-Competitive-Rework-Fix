@@ -46,24 +46,30 @@ Actualmente:
 
 Targets disponibles:
 
-- `make build`
 - `make deps-windows`
 - `make build-windows`
+- `make artifact-windows`
 - `make deps-linux`
 - `make build-linux`
+- `make artifact-linux`
 - `make clean`
 - `make clean-all`
 
 Comportamiento:
 
-- `make build` delega en `make build-windows`
-- `make deps-windows` descarga el compilador de SourceMod para Windows en `.tmp/sourcemod-windows/`
+- `make deps-windows` descarga el compilador de SourceMod para Windows en `deps/sourcemod-windows/`
 - `make build-windows` genera salida en `build-windows/`
-- `make deps-linux` descarga el compilador de SourceMod para Linux en `.tmp/sourcemod-linux/`
+- `make artifact-windows` genera `dist/sourcemod/artifact/` a partir de `build-windows/`
+- `make deps-linux` descarga el compilador de SourceMod para Linux en `deps/sourcemod-linux/`
 - `make build-linux` genera salida en `build-linux/`
+- `make artifact-linux` genera `dist/sourcemod/artifact/` a partir de `build-linux/`
 
 Los targets `build-windows` y `build-linux` no descargan dependencias automáticamente.
 Primero hay que ejecutar el `deps-*` correspondiente.
+
+En Windows los targets usan `python`.
+En Linux/WSL los targets usan `python3`.
+En Linux/WSL, `build-linux` compila desde un workspace temporal en `/tmp` y copia allí también el binario Linux de `spcomp` junto con su directorio `include`, para evitar la lentitud de I/O sobre `/mnt/c`.
 
 Los builds locales incluyen solo el contenido desplegable bajo:
 

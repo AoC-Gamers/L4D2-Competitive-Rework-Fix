@@ -1,6 +1,6 @@
 # CI / build outputs
 dist/
-.tmp/
+deps/
 build/
 build-windows/
 build-linux/

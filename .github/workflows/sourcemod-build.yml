@@ -30,14 +30,14 @@ jobs:
       - name: Install SourceMod build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --yes curl tar python3
+          sudo apt-get install --yes curl tar python3 make
 
       - name: Show SourceMod version
         run: |
           echo "SOURCEMOD_VERSION=${SOURCEMOD_VERSION}"
           echo "SOURCEMOD_ARCHIVE_URL=${SOURCEMOD_ARCHIVE_URL}"
 
-      - name: Compile SourceMod plugins
+      - name: Build SourceMod artifact
         run: bash ./scripts/ci-build-sourcemod.sh
 
       - name: Validate SourceMod artifact

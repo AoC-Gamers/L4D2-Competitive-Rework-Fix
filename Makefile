@@ -1,27 +1,34 @@
 POWERSHELL ?= powershell
-SPCOMP ?= ./.tmp/sourcemod-windows/addons/sourcemod/scripting/spcomp.exe
+PYTHON ?= python
+PYTHON3 ?= python3
+SPCOMP ?= deps/sourcemod-windows/addons/sourcemod/scripting/spcomp.exe
 SOURCEMOD_VERSION ?= 1.12
-LINUX_SPCOMP ?= ./.tmp/sourcemod-linux/addons/sourcemod/scripting/spcomp
+LINUX_SPCOMP ?= deps/sourcemod-linux/addons/sourcemod/scripting/spcomp
 
-.PHONY: deps-windows deps-linux build build-windows build-linux clean clean-all
+.PHONY: deps-windows deps-linux build-windows build-linux artifact-windows artifact-linux clean clean-all
 
 deps-windows:
-	$(POWERSHELL) -ExecutionPolicy Bypass -Command "& './scripts/deps-windows.ps1' -SourceModVersion '$(SOURCEMOD_VERSION)'"
+	$(PYTHON) ./scripts/fetch-sourcemod.py --root . --platform windows --version "$(SOURCEMOD_VERSION)"
 
 deps-linux:
-	bash -lc "SOURCEMOD_VERSION='$(SOURCEMOD_VERSION)' ./scripts/deps-linux.sh"
-
-build:
-	$(MAKE) build-windows
+	$(PYTHON3) ./scripts/fetch-sourcemod.py --root . --platform linux --version "$(SOURCEMOD_VERSION)"
 
 build-windows:
-	$(POWERSHELL) -ExecutionPolicy Bypass -Command "& './scripts/build-local.ps1' -SpCompPath '$(SPCOMP)' -OutputRoot 'build-windows'"
+	$(PYTHON) ./scripts/build-local.py --root . --spcomp "$(SPCOMP)" --output-root build-windows --compile-log deps/build-windows-compile.log
 
 build-linux:
-	bash -lc "SPCOMP_BIN='$(LINUX_SPCOMP)' OUTPUT_ROOT='build-linux' ./scripts/build-local-linux.sh"
+	$(PYTHON3) ./scripts/build-local.py --root . --spcomp "$(LINUX_SPCOMP)" --output-root build-linux --compile-log deps/build-linux-compile.log --workspace /tmp/l4d2crf-build
+
+artifact-windows:
+	$(MAKE) build-windows
+	$(PYTHON) ./scripts/stage-artifact.py . ./build-windows ./deps/build-windows-compile.log
+
+artifact-linux:
+	$(MAKE) build-linux
+	$(PYTHON3) ./scripts/stage-artifact.py . ./build-linux ./deps/build-linux-compile.log
 
 clean:
-	$(POWERSHELL) -ExecutionPolicy Bypass -Command "if (Test-Path './build') { Remove-Item -Recurse -Force './build' }; if (Test-Path './build-windows') { Remove-Item -Recurse -Force './build-windows' }; if (Test-Path './build-linux') { Remove-Item -Recurse -Force './build-linux' }"
+	cmd /c "if exist build rmdir /s /q build & if exist build-windows rmdir /s /q build-windows & if exist build-linux rmdir /s /q build-linux"
 
 clean-all:
-	$(POWERSHELL) -ExecutionPolicy Bypass -Command "if (Test-Path './build') { Remove-Item -Recurse -Force './build' }; if (Test-Path './build-windows') { Remove-Item -Recurse -Force './build-windows' }; if (Test-Path './build-linux') { Remove-Item -Recurse -Force './build-linux' }; if (Test-Path './dist') { Remove-Item -Recurse -Force './dist' }; if (Test-Path './.tmp') { Remove-Item -Recurse -Force './.tmp' }"
+	cmd /c "if exist build rmdir /s /q build & if exist build-windows rmdir /s /q build-windows & if exist build-linux rmdir /s /q build-linux & if exist dist rmdir /s /q dist & if exist deps rmdir /s /q deps"

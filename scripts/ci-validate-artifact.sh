@@ -26,6 +26,7 @@ source_translations_dir = os.path.join(root_dir, "addons", "sourcemod", "transla
 artifact_plugins_dir = os.path.join(artifact_dir, "addons", "sourcemod", "plugins")
 artifact_scripting_dir = os.path.join(artifact_dir, "addons", "sourcemod", "scripting")
 artifact_translations_dir = os.path.join(artifact_dir, "addons", "sourcemod", "translations")
+build_buckets = package_map.get("build", {}).get("plugins", {})
 
 expected_plugins = sorted(
     os.path.splitext(entry)[0]
@@ -38,12 +39,10 @@ if not expected_plugins:
 
 classified_expected = {}
 for plugin in expected_plugins:
-    if plugin in package_map.get("root", []):
-        classified_expected[plugin] = "root"
-    elif plugin in package_map.get("anticheat", []):
-        classified_expected[plugin] = "anticheat"
-    elif plugin in package_map.get("fixes", []):
-        classified_expected[plugin] = "fixes"
+    for bucket, plugins in build_buckets.items():
+        if plugin in plugins:
+            classified_expected[plugin] = bucket
+            break
     else:
         classified_expected[plugin] = "optional"
 

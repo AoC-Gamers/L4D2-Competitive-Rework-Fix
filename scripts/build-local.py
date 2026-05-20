@@ -2,7 +2,6 @@
 
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -10,13 +9,18 @@ import time
 from pathlib import Path
 
 
-def classify_plugin(plugin_stem: str, package_map: dict) -> str:
-    if plugin_stem in package_map.get("root", []):
-        return "root"
-    if plugin_stem in package_map.get("anticheat", []):
-        return "anticheat"
-    if plugin_stem in package_map.get("fixes", []):
-        return "fixes"
+def get_build_plugin_buckets(manifest: dict) -> dict:
+    return manifest.get("build", {}).get("plugins", {})
+
+
+def get_artifact_manifest(manifest: dict) -> dict:
+    return manifest.get("artifact", {}).get("addons", {}).get("sourcemod", {})
+
+
+def classify_plugin(plugin_stem: str, build_buckets: dict) -> str:
+    for bucket, plugins in build_buckets.items():
+        if plugin_stem in plugins:
+            return bucket
     return "optional"
 
 
@@ -72,11 +76,69 @@ def remove_tree_if_exists(target: Path) -> None:
         raise last_error
 
 
+def detect_default_workspace(root: Path) -> Path | None:
+    if root.as_posix().startswith("/mnt/"):
+        return Path("/tmp/l4d2crf-build")
+    return None
+
+
+def copy_selected_files(names: list[str], source_dir: Path, target_dir: Path) -> None:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        source = source_dir / name
+        target = target_dir / name
+        if not source.exists():
+            raise FileNotFoundError(f"Required file not found: {source}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+
+
+def copy_selected_directories(names: list[str], source_dir: Path, target_dir: Path) -> None:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        source = source_dir / name
+        target = target_dir / name
+        if not source.exists():
+            raise FileNotFoundError(f"Required directory not found: {source}")
+        shutil.copytree(source, target, dirs_exist_ok=True)
+
+
+def copy_all_children(source_dir: Path, target_dir: Path) -> None:
+    if not source_dir.exists():
+        raise FileNotFoundError(f"Required source directory not found: {source_dir}")
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for entry in source_dir.iterdir():
+        destination = target_dir / entry.name
+        if entry.is_dir():
+            shutil.copytree(entry, destination, dirs_exist_ok=True)
+        else:
+            shutil.copy2(entry, destination)
+
+
+def copy_manifest_tree(manifest: dict, source_root: Path, target_root: Path) -> None:
+    if manifest.get("all", False):
+        copy_all_children(source_root, target_root)
+
+    files = manifest.get("files", [])
+    if files:
+        copy_selected_files(files, source_root, target_root)
+
+    directories = manifest.get("dirs", [])
+    if directories:
+        copy_selected_directories(directories, source_root, target_root)
+
+    for key, value in manifest.items():
+        if key in {"all", "files", "dirs"}:
+            continue
+        if isinstance(value, dict):
+            copy_manifest_tree(value, source_root / key, target_root / key)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compile SourceMod plugins into a local build directory.")
     parser.add_argument("--root", default=".", help="Repository root")
     parser.add_argument("--spcomp", required=True, help="Path to spcomp executable")
-    parser.add_argument("--output-root", default="build", help="Output directory relative to repo root")
+    parser.add_argument("--output-root", default=".build/smx", help="Output directory relative to repo root")
     parser.add_argument("--compile-log", required=True, help="Compile log path relative to repo root")
     parser.add_argument("--workspace", default="", help="Optional temporary workspace directory")
     args = parser.parse_args()
@@ -85,28 +147,32 @@ def main() -> int:
     spcomp = Path(args.spcomp).resolve()
     output_root = (root / args.output_root).resolve()
     compile_log = (root / args.compile_log).resolve()
-    workspace = Path(args.workspace).resolve() if args.workspace else None
+    workspace = Path(args.workspace).resolve() if args.workspace else detect_default_workspace(root)
 
     if not spcomp.exists():
         raise FileNotFoundError(f"spcomp not found: {spcomp}")
+    spcomp.chmod(spcomp.stat().st_mode | 0o111)
 
     source_mod_include_dir = spcomp.parent / "include"
     if not source_mod_include_dir.exists():
         raise FileNotFoundError(f"SourceMod include dir not found: {source_mod_include_dir}")
 
-    package_map_path = root / "plugin-package-map.json"
-    if not package_map_path.exists():
-        raise FileNotFoundError(f"plugin-package-map.json not found: {package_map_path}")
+    manifest_path = root / "plugin-package-map.json"
+    if not manifest_path.exists():
+        raise FileNotFoundError(f"plugin-package-map.json not found: {manifest_path}")
 
-    with package_map_path.open("r", encoding="utf-8") as fh:
-        package_map = json.load(fh)
+    with manifest_path.open("r", encoding="utf-8") as fh:
+        manifest = json.load(fh)
+
+    build_buckets = get_build_plugin_buckets(manifest)
+    artifact_manifest = get_artifact_manifest(manifest)
 
     source_root = root / "addons" / "sourcemod"
     scripting_dir = source_root / "scripting"
     include_dir = scripting_dir / "include"
-    translations_dir = source_root / "translations"
 
     if workspace is not None:
+        print(f"Using temporary workspace: {workspace}", flush=True)
         remove_tree_if_exists(workspace)
         workspace.mkdir(parents=True, exist_ok=True)
         workspace_source_root = workspace / "addons" / "sourcemod"
@@ -120,16 +186,13 @@ def main() -> int:
         source_root = workspace_source_root
         scripting_dir = source_root / "scripting"
         include_dir = scripting_dir / "include"
-        translations_dir = source_root / "translations"
         spcomp = workspace_spcomp
         source_mod_include_dir = workspace_spcomp_dir / "include"
 
     artifact_root = output_root / "addons" / "sourcemod"
     plugins_root = artifact_root / "plugins"
 
-    if output_root.exists():
-        remove_tree_if_exists(output_root)
-
+    remove_tree_if_exists(output_root)
     compile_log.parent.mkdir(parents=True, exist_ok=True)
     compile_log.write_text("", encoding="utf-8")
 
@@ -145,15 +208,14 @@ def main() -> int:
 
     for source_file in plugin_sources:
         plugin_stem = source_file.stem
-        bucket = classify_plugin(plugin_stem, package_map)
+        bucket = classify_plugin(plugin_stem, build_buckets)
         if bucket == "root":
             output_file = plugins_root / f"{plugin_stem}.smx"
         else:
             output_file = plugins_root / bucket / f"{plugin_stem}.smx"
         run_spcomp(spcomp, source_file, include_dirs, output_file, compile_log)
 
-    shutil.copytree(scripting_dir, artifact_root / "scripting")
-    shutil.copytree(translations_dir, artifact_root / "translations")
+    copy_manifest_tree(artifact_manifest, source_root, artifact_root)
 
     if workspace is not None and workspace.exists():
         remove_tree_if_exists(workspace)

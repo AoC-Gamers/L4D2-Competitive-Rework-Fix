@@ -1,15 +1,17 @@
 # CI / build outputs
 dist/
 deps/
+.build/
 build/
-build-windows/
 build-linux/
+build-windows/
 
 # Logs and transient local artifacts
 *.log
 *.zip
 *.tar
 *.tar.gz
+__pycache__/
 
 # OS / editor noise
 .DS_Store

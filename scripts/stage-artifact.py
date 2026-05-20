@@ -1,40 +1,49 @@
 #!/usr/bin/env python3
 
-import os
 import shutil
 import sys
+from pathlib import Path
+
+
+def copy_if_exists(source: Path, destination: Path) -> None:
+    if not source.exists():
+        return
+    if source.is_dir():
+        shutil.copytree(source, destination, dirs_exist_ok=True)
+    else:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
 
 
 def main() -> int:
-    if len(sys.argv) != 4:
-        print("usage: stage-artifact.py <root_dir> <build_dir> <compile_log>", file=sys.stderr)
-        return 1
+    if len(sys.argv) not in (4, 5):
+        raise SystemExit("Usage: stage-artifact.py <root_dir> <build_dir> <compile_log> [output_dir]")
 
-    root_dir, build_dir, compile_log = sys.argv[1:4]
-    artifact_dir = os.path.join(root_dir, "dist", "sourcemod", "artifact")
-    addons_dir = os.path.join(build_dir, "addons")
+    root_dir = Path(sys.argv[1]).resolve()
+    build_dir = Path(sys.argv[2]).resolve()
+    compile_log = Path(sys.argv[3]).resolve()
+    output_dir = Path(sys.argv[4]).resolve() if len(sys.argv) == 5 else root_dir / "dist" / "sourcemod" / "artifact"
+    addons_dir = build_dir / "addons"
 
-    if not os.path.isdir(addons_dir):
-        print(f"Expected build output not found at {addons_dir}", file=sys.stderr)
-        return 1
+    if not addons_dir.exists():
+        raise FileNotFoundError(f"Expected build output not found at {addons_dir}")
 
-    dist_dir = os.path.dirname(artifact_dir)
-    if os.path.isdir(dist_dir):
-        shutil.rmtree(dist_dir)
-    os.makedirs(artifact_dir, exist_ok=True)
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    shutil.copytree(addons_dir, os.path.join(artifact_dir, "addons"))
-    shutil.copy2(os.path.join(root_dir, "README.md"), os.path.join(artifact_dir, "README.md"))
-    shutil.copy2(os.path.join(root_dir, "plugin-package-map.json"), os.path.join(artifact_dir, "plugin-package-map.json"))
-    shutil.copytree(os.path.join(root_dir, "docs"), os.path.join(artifact_dir, "docs"))
+    copy_if_exists(addons_dir, output_dir / "addons")
+    copy_if_exists(root_dir / "README.md", output_dir / "README.md")
+    copy_if_exists(root_dir / "plugin-package-map.json", output_dir / "plugin-package-map.json")
+    copy_if_exists(root_dir / "docs", output_dir / "docs")
 
-    compile_log_dest = os.path.join(artifact_dir, "compile.log")
-    if os.path.isfile(compile_log):
+    compile_log_dest = output_dir / "compile.log"
+    if compile_log.is_file():
         shutil.copy2(compile_log, compile_log_dest)
     else:
-        open(compile_log_dest, "w", encoding="utf-8").close()
+        compile_log_dest.write_text("", encoding="utf-8")
 
-    print(f"SourceMod artifacts generated in {artifact_dir}")
+    print(f"SourceMod artifacts generated in {output_dir}")
     return 0
 
 

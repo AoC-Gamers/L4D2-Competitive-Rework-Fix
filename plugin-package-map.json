@@ -1,9 +1,25 @@
 {
-  "root": [
-    "match_vote"
-  ],
-  "anticheat": [],
-  "fixes": [
-    "l4d2_fix_team_shuffle"
-  ]
+  "build": {
+    "plugins": {
+      "root": [
+        "match_vote"
+      ],
+      "anticheat": [],
+      "fixes": [
+        "l4d2_fix_team_shuffle"
+      ]
+    }
+  },
+  "artifact": {
+    "addons": {
+      "sourcemod": {
+        "scripting": {
+          "all": true
+        },
+        "translations": {
+          "all": true
+        }
+      }
+    }
+  }
 }

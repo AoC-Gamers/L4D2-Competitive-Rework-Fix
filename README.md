@@ -48,36 +48,36 @@ Actualmente:
 
 Targets disponibles:
 
-- `make deps-windows`
-- `make build-windows`
-- `make artifact-windows`
-- `make deps-linux`
-- `make build-linux`
-- `make artifact-linux`
+- `make deps-smx`
+- `make build-smx`
+- `make package-smx`
+- `make release`
 - `make clean`
 - `make clean-all`
 
 Comportamiento:
 
-- `make deps-windows` descarga el compilador de SourceMod para Windows en `deps/sourcemod-windows/`
-- `make build-windows` genera salida en `build-windows/`
-- `make artifact-windows` genera `dist/sourcemod/artifact/` a partir de `build-windows/`
-- `make deps-linux` descarga el compilador de SourceMod para Linux en `deps/sourcemod-linux/`
-- `make build-linux` genera salida en `build-linux/`
-- `make artifact-linux` genera `dist/sourcemod/artifact/` a partir de `build-linux/`
+- `make deps-smx` descarga el compilador de SourceMod para la plataforma actual
+- `make build-smx` genera salida en `.build/smx/`
+- `make package-smx` prepara `.build/package-smx/`
+- `make release` genera `dist/sourcemod/artifact/` y `dist/release/*.zip`
 
-Los targets `build-windows` y `build-linux` no descargan dependencias automáticamente.
-Primero hay que ejecutar el `deps-*` correspondiente.
+`build-smx` no descarga dependencias automáticamente.
+Primero hay que ejecutar `make deps-smx`.
 
 En Windows los targets usan `python`.
 En Linux/WSL los targets usan `python3`.
-En Linux/WSL, `build-linux` compila desde un workspace temporal en `/tmp` y copia allí también el binario Linux de `spcomp` junto con su directorio `include`, para evitar la lentitud de I/O sobre `/mnt/c`.
+En Linux/WSL, `build-smx` compila desde un workspace temporal en `/tmp/l4d2crf-build` cuando el repo está bajo `/mnt/`, para evitar la lentitud de I/O sobre discos montados.
 
 Los builds locales incluyen solo el contenido desplegable bajo:
 
 - `addons/sourcemod/plugins/`
 - `addons/sourcemod/scripting/`
 - `addons/sourcemod/translations/`
+
+Documentación del sistema de build:
+
+- [docs/build-system.md](docs/build-system.md)
 
 ## Documentacion
 

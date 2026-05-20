@@ -3,10 +3,12 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCEMOD_ARCHIVE_URL="${SOURCEMOD_ARCHIVE_URL:?SOURCEMOD_ARCHIVE_URL is required}"
 
-echo "Resolving Linux SourceMod dependencies through make..."
-make -C "$ROOT_DIR" deps-linux PYTHON3=python3 SOURCEMOD_VERSION="${SOURCEMOD_VERSION:-1.12}"
+echo "Resolving SourceMod dependencies through make..."
+make -C "$ROOT_DIR" deps-smx PYTHON=python3 SOURCEMOD_VERSION="${SOURCEMOD_VERSION:-1.12}" SMX_PLATFORM=linux
 
-echo "Building Linux artifact through make..."
-make -C "$ROOT_DIR" artifact-linux PYTHON3=python3 LINUX_SPCOMP="deps/sourcemod-linux/addons/sourcemod/scripting/spcomp"
+echo "Building Linux SMX through make..."
+make -C "$ROOT_DIR" build-smx PYTHON=python3 SPCOMP="deps/sourcemod-linux/addons/sourcemod/scripting/spcomp"
+
+echo "Packaging Linux SMX tree through make..."
+make -C "$ROOT_DIR" package-smx PYTHON=python3

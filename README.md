@@ -36,10 +36,12 @@ El archivo `plugin-package-map.json` define qué plugins deben salir fuera de `o
 
 - `anticheat`: plugins que deben empaquetarse en `plugins/anticheat/`
 - `fixes`: plugins que deben empaquetarse en `plugins/fixes/`
+- `root`: plugins que deben empaquetarse directamente en `plugins/`
 - cualquier plugin no listado cae por defecto en `plugins/optional/`
 
 Actualmente:
 
+- `match_vote` se empaqueta en `plugins/`
 - `l4d2_fix_team_shuffle` se empaqueta en `plugins/fixes/`
 
 ## Build Local

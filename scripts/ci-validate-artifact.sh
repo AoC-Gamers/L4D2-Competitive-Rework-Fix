@@ -38,7 +38,9 @@ if not expected_plugins:
 
 classified_expected = {}
 for plugin in expected_plugins:
-    if plugin in package_map.get("anticheat", []):
+    if plugin in package_map.get("root", []):
+        classified_expected[plugin] = "root"
+    elif plugin in package_map.get("anticheat", []):
         classified_expected[plugin] = "anticheat"
     elif plugin in package_map.get("fixes", []):
         classified_expected[plugin] = "fixes"
@@ -46,7 +48,10 @@ for plugin in expected_plugins:
         classified_expected[plugin] = "optional"
 
 for plugin, folder in classified_expected.items():
-    compiled_path = os.path.join(artifact_plugins_dir, folder, f"{plugin}.smx")
+    if folder == "root":
+        compiled_path = os.path.join(artifact_plugins_dir, f"{plugin}.smx")
+    else:
+        compiled_path = os.path.join(artifact_plugins_dir, folder, f"{plugin}.smx")
     if not os.path.isfile(compiled_path):
         raise SystemExit(f"Missing compiled plugin: {compiled_path}")
 
@@ -64,6 +69,17 @@ for folder in ("anticheat", "fixes", "optional"):
         expected_folder = classified_expected.get(plugin)
         if expected_folder != folder:
             raise SystemExit(f"Plugin {plugin} packaged in {folder}, expected {expected_folder}")
+
+for entry in os.listdir(artifact_plugins_dir):
+    entry_path = os.path.join(artifact_plugins_dir, entry)
+    if os.path.isdir(entry_path):
+        continue
+    if not entry.endswith(".smx"):
+        raise SystemExit(f"Unexpected non-plugin entry in plugins root: {entry}")
+    plugin = os.path.splitext(entry)[0]
+    expected_folder = classified_expected.get(plugin)
+    if expected_folder != "root":
+        raise SystemExit(f"Plugin {plugin} packaged in root, expected {expected_folder}")
 
 source_sp_entries = sorted(entry for entry in os.listdir(source_scripting_dir) if entry.endswith(".sp"))
 artifact_sp_entries = sorted(entry for entry in os.listdir(artifact_scripting_dir) if entry.endswith(".sp"))

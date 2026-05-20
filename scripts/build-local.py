@@ -6,10 +6,13 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 
 def classify_plugin(plugin_stem: str, package_map: dict) -> str:
+    if plugin_stem in package_map.get("root", []):
+        return "root"
     if plugin_stem in package_map.get("anticheat", []):
         return "anticheat"
     if plugin_stem in package_map.get("fixes", []):
@@ -23,7 +26,13 @@ def run_spcomp(spcomp: Path, source_file: Path, include_dirs: list[Path], output
         cmd.append(f"-i{include_dir}")
     cmd.append(f"-o{output_file}")
 
-    print(f"Compiling {source_file.name} -> plugins/{output_file.parent.name}/{output_file.name}", flush=True)
+    try:
+        plugins_index = output_file.parts.index("plugins")
+        rel_output = "/".join(output_file.parts[plugins_index:])
+    except ValueError:
+        rel_output = output_file.name
+
+    print(f"Compiling {source_file.name} -> {rel_output}", flush=True)
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
     if result.stdout:
@@ -42,6 +51,25 @@ def run_spcomp(spcomp: Path, source_file: Path, include_dirs: list[Path], output
 
     if not output_file.exists():
         raise RuntimeError(f"Expected output file was not generated: {output_file}")
+
+
+def remove_tree_if_exists(target: Path) -> None:
+    if not target.exists():
+        return
+
+    last_error = None
+    for _ in range(3):
+        try:
+            shutil.rmtree(target)
+            return
+        except FileNotFoundError:
+            return
+        except OSError as exc:
+            last_error = exc
+            time.sleep(0.2)
+
+    if target.exists() and last_error is not None:
+        raise last_error
 
 
 def main() -> int:
@@ -79,8 +107,7 @@ def main() -> int:
     translations_dir = source_root / "translations"
 
     if workspace is not None:
-        if workspace.exists():
-            shutil.rmtree(workspace)
+        remove_tree_if_exists(workspace)
         workspace.mkdir(parents=True, exist_ok=True)
         workspace_source_root = workspace / "addons" / "sourcemod"
         shutil.copytree(source_root, workspace_source_root, dirs_exist_ok=True)
@@ -101,11 +128,12 @@ def main() -> int:
     plugins_root = artifact_root / "plugins"
 
     if output_root.exists():
-        shutil.rmtree(output_root)
+        remove_tree_if_exists(output_root)
 
     compile_log.parent.mkdir(parents=True, exist_ok=True)
     compile_log.write_text("", encoding="utf-8")
 
+    plugins_root.mkdir(parents=True, exist_ok=True)
     for bucket in ("anticheat", "fixes", "optional"):
         (plugins_root / bucket).mkdir(parents=True, exist_ok=True)
 
@@ -118,14 +146,17 @@ def main() -> int:
     for source_file in plugin_sources:
         plugin_stem = source_file.stem
         bucket = classify_plugin(plugin_stem, package_map)
-        output_file = plugins_root / bucket / f"{plugin_stem}.smx"
+        if bucket == "root":
+            output_file = plugins_root / f"{plugin_stem}.smx"
+        else:
+            output_file = plugins_root / bucket / f"{plugin_stem}.smx"
         run_spcomp(spcomp, source_file, include_dirs, output_file, compile_log)
 
     shutil.copytree(scripting_dir, artifact_root / "scripting")
     shutil.copytree(translations_dir, artifact_root / "translations")
 
     if workspace is not None and workspace.exists():
-        shutil.rmtree(workspace)
+        remove_tree_if_exists(workspace)
 
     print()
     print(f"Build local completed in: {output_root}")

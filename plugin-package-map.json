@@ -1,4 +1,7 @@
 {
+  "root": [
+    "match_vote"
+  ],
   "anticheat": [],
   "fixes": [
     "l4d2_fix_team_shuffle"

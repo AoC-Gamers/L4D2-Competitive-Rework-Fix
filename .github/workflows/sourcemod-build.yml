@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+    tags:
+      - "channel/*"
   pull_request:
     branches:
       - main
@@ -21,7 +23,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   SOURCEMOD_VERSION: ${{ github.event.inputs.sourcemod_version || '1.12' }}
@@ -33,7 +35,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install SourceMod build dependencies
         run: |
@@ -55,20 +57,23 @@ jobs:
         id: artifact
         shell: bash
         run: |
-          case "${GITHUB_REF_NAME}" in
-            main)
-              echo "version=latest" >> "$GITHUB_OUTPUT"
-              echo "basename=l4d2-competitive-rework-fix-latest" >> "$GITHUB_OUTPUT"
-              ;;
-            develop)
-              echo "version=develop" >> "$GITHUB_OUTPUT"
-              echo "basename=l4d2-competitive-rework-fix-develop" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "version=pr-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
-              echo "basename=l4d2-competitive-rework-fix-pr-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
-              ;;
-          esac
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#channel/}"
+            release_tag="${GITHUB_REF_NAME}"
+          elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            version="latest"
+            release_tag="channel/latest"
+          elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
+            version="develop"
+            release_tag="channel/develop"
+          else
+            version="pr-${GITHUB_SHA::7}"
+            release_tag=""
+          fi
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "basename=l4d2-competitive-rework-fix-${version}" >> "$GITHUB_OUTPUT"
+          echo "release_tag=${release_tag}" >> "$GITHUB_OUTPUT"
 
       - name: Package SourceMod artifact
         env:
@@ -83,3 +88,12 @@ jobs:
           path: dist/release/${{ steps.artifact.outputs.basename }}.zip
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish release asset
+        if: steps.artifact.outputs.release_tag != ''
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.artifact.outputs.release_tag }}
+          files: dist/release/${{ steps.artifact.outputs.basename }}.zip
+          draft: false
+          prerelease: false

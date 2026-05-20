@@ -1,0 +1,90 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "en"        "[{olive}Hybrid Bonus{default}]"
+    }
+
+    "RoundBonusSummary"
+    {
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:s}"
+        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default}/{green}{3}{default} <{olive}{4:.1f}%{default}> [{5}]"
+    }
+
+    "RoundBonusFull"
+    {
+        "#format"   "{1:d},{2:d},{3:.1f},{4:d},{5:.1f},{6:d},{7:.1f},{8:d},{9:.1f}"
+        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}> [HB: {green}{4}{default} <{olive}{5:.1f}%{default}> | DB: {green}{6}{default} <{olive}{7:.1f}%{default}> | Pills: {green}{8}{default} <{olive}{9:.1f}%{default}>]"
+    }
+
+    "RoundBonusLite"
+    {
+        "#format"   "{1:d},{2:d},{3:.1f}"
+        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}>"
+    }
+
+    "RoundBonusSimplePrevious"
+    {
+        "#format"   "{1:d},{2:d},{3:.1f}"
+        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}>"
+    }
+
+    "RoundBonusSimple"
+    {
+        "#format"   "{1:d},{2:d},{3:.1f},{4:.0f},{5:.0f},{6:.0f}"
+        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}> [HB: {olive}{4:.0f}%{default} | DB: {olive}{5:.0f}%{default} | Pills: {olive}{6:.0f}%{default}]"
+    }
+
+    "MapInfoTitle"
+    {
+        "#format"   "{1:d},{2:d}"
+        "en"        "Map Info :: {green}{1}v{2}{default}"
+    }
+
+    "MapInfoDistance"
+    {
+        "#format"   "{1:d}"
+        "en"        "Distance: {green}{1}{default}"
+    }
+
+    "MapInfoTotalBonus"
+    {
+        "#format"   "{1:d}"
+        "en"        "Total Bonus: {green}{1}{default} <{olive}100.0%{default}>"
+    }
+
+    "MapInfoHealthBonus"
+    {
+        "#format"   "{1:d},{2:.1f}"
+        "en"        "Health Bonus: {green}{1}{default} <{olive}{2:.1f}%{default}>"
+    }
+
+    "MapInfoDamageBonus"
+    {
+        "#format"   "{1:d},{2:.1f}"
+        "en"        "Damage Bonus: {green}{1}{default} <{olive}{2:.1f}%{default}>"
+    }
+
+    "MapInfoPillsBonus"
+    {
+        "#format"   "{1:d},{2:d},{3:.1f}"
+        "en"        "Pills Bonus: {green}{1}{default} (max {green}{2}{default}) <{olive}{3:.1f}%{default}>"
+    }
+
+    "MapInfoTiebreaker"
+    {
+        "#format"   "{1:d}"
+        "en"        "Tiebreaker: {green}{1}{default}"
+    }
+
+    "TiebreakerScores"
+    {
+        "#format"   "{1:d},{2:d}"
+        "en"        "{olive}TIEBREAKER{default}: Team {green}#1{default} - {green}{1}{default}, Team {green}#2{default} - {green}{2}{default}"
+    }
+
+    "TiebreakerEqual"
+    {
+        "en"        "Teams performed equally. A clear round winner could not be determined."
+    }
+}

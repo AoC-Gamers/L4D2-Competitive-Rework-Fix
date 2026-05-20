@@ -1,0 +1,37 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "es"        "{olive}[ScoreMod]{default}"
+    }
+
+    "RoundBonus"
+    {
+        "#format"   "{1:d},{2:d}"
+        "es"        "Bonus de ronda {green}{1}{default}: {green}{2}{default}"
+    }
+
+    "Difference"
+    {
+        "#format"   "{1:d}"
+        "es"        "Diferencia: {green}{1}{default}"
+    }
+
+    "RoundBonusWithDifference"
+    {
+        "#format"   "{1:d},{2:d},{3:d}"
+        "es"        "Bonus de ronda {green}{1}{default}: {green}{2}{default} {default}(Diferencia: {green}{3}{default})"
+    }
+
+    "HealthBonus"
+    {
+        "#format"   "{1:d}"
+        "es"        "Bonus de vida: {green}{1}{default}"
+    }
+
+    "CustomMaxDistance"
+    {
+        "#format"   "{1:d}"
+        "es"        "Distancia maxima personalizada: {green}{1}{default}"
+    }
+}

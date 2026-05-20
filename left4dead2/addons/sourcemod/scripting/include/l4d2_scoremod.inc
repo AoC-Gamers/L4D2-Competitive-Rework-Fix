@@ -1,0 +1,88 @@
+#if defined _l4d2_scoremod_included
+	#endinput
+#endif
+#define _l4d2_scoremod_included
+
+enum SMClassicBonusType
+{
+    SMClassicBonusType_Total = 0
+}
+
+/**
+ * Returns a classic bonus value by type.
+ *
+ * The bonus type is required. The client is optional.
+ * Pass client 0 to return the current team-wide value for that type.
+ * Pass a survivor client index to return that survivor's individual contribution.
+ * Ineligible survivors return 0.
+ *
+ * @param type          Bonus type to query.
+ * @param client        Survivor client index, or 0 for the team aggregate.
+ * @return              Current bonus value for the requested type.
+ */
+native int SMClassic_GetBonus(SMClassicBonusType type, int client = 0);
+
+/**
+ * Returns a maximum classic bonus value by type.
+ *
+ * @param type          Bonus type to query.
+ * @return              Maximum bonus value for the requested type.
+ */
+native int SMClassic_GetMaxBonus(SMClassicBonusType type);
+
+/**
+ * Fills a KeyValues snapshot with current round and client classic bonus data.
+ *
+ * The caller owns the KeyValues handle and remains responsible for closing it.
+ * Existing "rounds" and "clients" subkeys are replaced.
+ *
+ * Example snapshot:
+ * "scoremod_bonus_snapshot"
+ * {
+ *     "current_round"      "2"
+ *     "total_bonus"        "412"
+ *     "max_bonus"          "800"
+ *     "clients"
+ *     {
+ *         "123"
+ *         {
+ *             "bonus"             "103"
+ *             "permanent_health"  "56"
+ *             "temporary_health"  "18"
+ *         }
+ *     }
+ * }
+ *
+ * @param kv            Destination KeyValues handle.
+ */
+native void SMClassic_FillBonusSnapshotKv(KeyValues kv);
+
+/**
+ * Fired when the match has been finalized at the end of round 2.
+ *
+ * Consumers can call SMClassic_FillBonusSnapshotKv() inside this forward to read
+ * the final detailed score snapshot.
+ *
+ * @param winningTeam   Winning team index: 1, 2, or 0 if tied.
+ */
+forward void SMClassic_OnMatchFinalized(int winningTeam);
+
+public SharedPlugin __pl_l4d2_scoremod =
+{
+	name = "l4d2_scoremod",
+	file = "l4d2_scoremod.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_l4d2_scoremod_SetNTVOptional()
+{
+	MarkNativeAsOptional("SMClassic_GetBonus");
+	MarkNativeAsOptional("SMClassic_GetMaxBonus");
+	MarkNativeAsOptional("SMClassic_FillBonusSnapshotKv");
+}
+#endif

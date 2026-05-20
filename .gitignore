@@ -1,0 +1,14 @@
+# CI / build outputs
+dist/
+.tmp/
+
+# Logs and transient local artifacts
+*.log
+*.zip
+*.tar
+*.tar.gz
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini

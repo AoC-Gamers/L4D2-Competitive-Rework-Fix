@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"[{olive}!{default}]"
+		"es"		"[{olive}!{default}]"
+	}
+
+	"WrongTeamDuringOrganization"
+	{
+		"en"		"Team {green}organization{default} is in progress. Wait in spectators."
+		"es"		"La {green}organizacion de equipos{default} sigue en curso. Espera en espectadores."
+	}
+
+	"TeamsOrganizationFinished"
+	{
+		"en"		"Team {green}organization time{default} has ended."
+		"es"		"El {green}tiempo de organizacion{default} de equipos ha terminado."
+	}
+
+	"WaitingForSurvivorsList"
+	{
+		"en"		"Missing {blue}survivors{default}: {blue}%s{default}."
+		"es"		"Faltan en {blue}survivors{default}: {blue}%s{default}."
+	}
+
+	"WaitingForInfectedList"
+	{
+		"en"		"Missing {red}infected{default}: {red}%s{default}."
+		"es"		"Faltan en {red}infected{default}: {red}%s{default}."
+	}
+
+	"MissingSurvivorsAfterOrganization"
+	{
+		"en"		"Missing {blue}survivors{default} after organization: {blue}%s{default}."
+		"es"		"Faltan en {blue}survivors{default} tras la organizacion: {blue}%s{default}."
+	}
+
+	"MissingInfectedAfterOrganization"
+	{
+		"en"		"Missing {red}infected{default} after organization: {red}%s{default}."
+		"es"		"Faltan en {red}infected{default} tras la organizacion: {red}%s{default}."
+	}
+}

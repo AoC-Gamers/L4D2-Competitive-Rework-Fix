@@ -34,46 +34,6 @@ native int SMPlus_GetBonus(SMPlusBonusType type, int client = 0);
 native int SMPlus_GetMaxBonus(SMPlusBonusType type);
 
 /**
- * Returns the maximum permanent health bonus for the round.
- *
- * @return              Maximum health bonus.
- */
-stock int SMPlus_GetMaxHealthBonus()
-{
-    return SMPlus_GetMaxBonus(SMPlusBonusType_Health);
-}
-
-/**
- * Returns the maximum temporary health or damage bonus for the round.
- *
- * @return              Maximum damage bonus.
- */
-stock int SMPlus_GetMaxDamageBonus()
-{
-    return SMPlus_GetMaxBonus(SMPlusBonusType_Damage);
-}
-
-/**
- * Returns the maximum pills bonus for the round.
- *
- * @return              Maximum pills bonus.
- */
-stock int SMPlus_GetMaxPillsBonus()
-{
-    return SMPlus_GetMaxBonus(SMPlusBonusType_Pills);
-}
-
-/**
- * Returns the maximum total bonus for the round.
- *
- * @return              Maximum total round bonus.
- */
-stock int SMPlus_GetRoundMaxBonus()
-{
-    return SMPlus_GetMaxBonus(SMPlusBonusType_Total);
-}
-
-/**
  * Fills a KeyValues snapshot with current round and client bonus data.
  *
  * The caller owns the KeyValues handle and remains responsible for closing it.

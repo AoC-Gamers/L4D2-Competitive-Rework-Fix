@@ -1,0 +1,415 @@
+"Phrases"
+{
+	"on"
+	{
+		"en"		"{blue}on{default}"
+	}
+	
+	"off"
+	{
+		"en"		"{red}off{default}"
+	}
+
+	"Tag"
+	{
+		"en"		"[{olive}HUD{default}]"
+	}
+	
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t},{2:t}"
+		"en"		"{1} Spectator HUD is now {2}"
+	}
+	
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t},{2:t}"
+		"en"		"{1} Tank HUD is now {2}"
+	}
+	
+	"Notify_SpechudUsage"
+	{
+		"#format"	"{1:t}"
+		"en"		"{1} Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD"
+	}
+	
+	"Notify_TankhudUsage"
+	{
+		"#format"	"{1:t}"
+		"en"		"{1} Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD"
+	}
+
+	"Spechud_SurvivorsScavenge"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"->1. Survivors [{1} of {2}]"
+	}
+
+	"Spechud_SurvivorsVersusLive"
+	{
+		"#format"	"{1:i}"
+		"en"		"->1. Survivors [{1}]"
+	}
+
+	"Spechud_SurvivorsVersus"
+	{
+		"#format"	"{1:i}"
+		"en"		"->1. Survivors [{1}]"
+	}
+
+	"Spechud_InfectedScavenge"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"->2. Infected [{1} of {2}]"
+	}
+
+	"Spechud_InfectedVersus"
+	{
+		"#format"	"{1:i}"
+		"en"		"->2. Infected [{1}]"
+	}
+
+	"Spechud_TankHeader"
+	{
+		"en"		"->3. Tank"
+	}
+
+	"Spechud_GameRoundScavenge"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"->3. {1} (R#{2})"
+	}
+
+	"Spechud_GameRoundVersus"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"->3. {1} (R#{2})"
+	}
+
+	"Spechud_BestOf"
+	{
+		"#format"	"{1:i}"
+		"en"		"Best of {1}"
+	}
+
+	"Spechud_NoSI"
+	{
+		"en"		"There is no SI at this moment."
+	}
+
+	"Spechud_ServerHeader"
+	{
+		"#format"	"{1:s},{2:i},{3:i},{4:i}"
+		"en"		"Server: {1} [Slots {2}/{3} | {4}T]"
+	}
+
+	"Spechud_AccumulatedTime"
+	{
+		"en"		"> Accumulated Time"
+	}
+
+	"Spechud_OpponentDuration"
+	{
+		"en"		"> Opponent Duration"
+	}
+
+	"Spechud_TankHudTitle"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} :: Tank HUD"
+	}
+
+	"Spechud_ControlPlayer"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"Control : {1} ({2})"
+	}
+
+	"Spechud_ControlAI"
+	{
+		"#format"	"{1:s}"
+		"en"		"Control : AI ({1})"
+	}
+
+	"Spechud_HealthDead"
+	{
+		"en"		"Health  : Dead"
+	}
+
+	"Spechud_HealthValue"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"Health  : {1} / {2}%"
+	}
+
+	"Spechud_FrustrationValue"
+	{
+		"#format"	"{1:i}"
+		"en"		"Frustr.  : {1}%"
+	}
+
+	"Spechud_FrustrationAI"
+	{
+		"en"		"Frustr.  : AI"
+	}
+
+	"Spechud_NetworkValue"
+	{
+		"#format"	"{1:i},{2:f}"
+		"en"		"Network: {1}ms / {2}"
+	}
+
+	"Spechud_NetworkValueNoLerp"
+	{
+		"#format"	"{1:i}"
+		"en"		"Network: {1}ms"
+	}
+
+	"Spechud_NetworkAI"
+	{
+		"en"		"Network: AI"
+	}
+
+	"Spechud_OnFireValue"
+	{
+		"#format"	"{1:i}"
+		"en"		"On Fire : {1}s"
+	}
+
+	"Spechud_SurvivorHanging"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"{1}: <{2}HP@Hanging>"
+	}
+
+	"Spechud_SurvivorIncap"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s},{5:i}"
+		"en"		"{1}: <{2}HP@{3}> [{4} {5}]"
+	}
+
+	"Spechud_SurvivorBleeding"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s}"
+		"en"		"{1}: {2}HP{3} [{4}]"
+	}
+
+	"Spechud_SurvivorBleedingIncap"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s}"
+		"en"		"{1}: {2}HP (#{3}) [{4}]"
+	}
+
+	"Spechud_InfectedDead"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1}: Dead"
+	}
+
+	"Spechud_InfectedDeadSpawn"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{1}: Dead ({2})"
+	}
+
+	"Spechud_InfectedGhostHealth"
+	{
+		"#format"	"{1:s},{2:s},{3:i}"
+		"en"		"{1}: {2} (Ghost@{3}HP)"
+	}
+
+	"Spechud_InfectedGhost"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{1}: {2} (Ghost)"
+	}
+
+	"Spechud_CooldownSuffix"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1}s"
+	}
+
+	"Spechud_InfectedOnFire"
+	{
+		"#format"	"{1:s},{2:s},{3:i},{4:s}"
+		"en"		"{1}: {2} ({3}HP) [On Fire]{4}"
+	}
+
+	"Spechud_InfectedAlive"
+	{
+		"#format"	"{1:s},{2:s},{3:i},{4:s}"
+		"en"		"{1}: {2} ({3}HP){4}"
+	}
+
+	"Spechud_HybridStats"
+	{
+		"#format"	"{1:f},{2:f},{3:i},{4:f}"
+		"en"		"> HB: {1:.0f}% | DB: {2:.0f}% | Pills: {3} / {4:.0f}%"
+	}
+
+	"Spechud_BonusValue"
+	{
+		"#format"	"{1:i},{2:f}"
+		"en"		"> Bonus: {1} <{2:.1f}%>"
+	}
+
+	"Spechud_DistanceValue"
+	{
+		"#format"	"{1:i}"
+		"en"		"> Distance: {1}"
+	}
+
+	"Spechud_BossFlowTank"
+	{
+		"#format"	"{1:s}"
+		"en"		"Tank: {1}"
+	}
+
+	"Spechud_BossFlowWitch"
+	{
+		"#format"	"{1:s}"
+		"en"		"Witch: {1}"
+	}
+
+	"Spechud_BossFlowCurrent"
+	{
+		"#format"	"{1:i}"
+		"en"		"Current: {1}%"
+	}
+
+	"Spechud_BossFlowStatic"
+	{
+		"en"		"Static"
+	}
+
+	"Spechud_BossFlowEvent"
+	{
+		"en"		"Event"
+	}
+
+	"Spechud_TankSelection"
+	{
+		"#format"	"{1:s}"
+		"en"		"Tank: {1}"
+	}
+
+	"Spechud_NextStats"
+	{
+		"#format"	"{1:i},{2:i},{3:i}"
+		"en"		"> Perm: {1} | Temp: {2} | Pills: {3}"
+	}
+
+	"Spechud_SurvivorDead"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1}: Dead"
+	}
+
+	"Spechud_SurvivorHanging"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"{1}: <{2}HP@Hanging>"
+	}
+
+	"Spechud_SurvivorIncap"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s},{5:i}"
+		"en"		"{1}: <{2}HP@{3}> [{4} {5}]"
+	}
+
+	"Spechud_SurvivorBleeding"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s}"
+		"en"		"{1}: {2}HP{3} [{4}]"
+	}
+
+	"Spechud_SurvivorBleedingIncap"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s}"
+		"en"		"{1}: {2}HP (#{3}) [{4}]"
+	}
+
+	"Spechud_InfectedDead"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1}: Dead"
+	}
+
+	"Spechud_InfectedDeadSpawn"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{1}: Dead ({2})"
+	}
+
+	"Spechud_InfectedGhostHealth"
+	{
+		"#format"	"{1:s},{2:s},{3:i}"
+		"en"		"{1}: {2} (Ghost@{3}HP)"
+	}
+
+	"Spechud_InfectedGhost"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{1}: {2} (Ghost)"
+	}
+
+	"Spechud_CooldownSuffix"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1}s"
+	}
+
+	"Spechud_InfectedOnFire"
+	{
+		"#format"	"{1:s},{2:s},{3:i},{4:s}"
+		"en"		"{1}: {2} ({3}HP) [On Fire]{4}"
+	}
+
+	"Spechud_InfectedAlive"
+	{
+		"#format"	"{1:s},{2:s},{3:i},{4:s}"
+		"en"		"{1}: {2} ({3}HP){4}"
+	}
+
+	"Spechud_Spawning"
+	{
+		"en"		"Spawning..."
+	}
+
+	"Spechud_TankPassNative"
+	{
+		"en"		"native"
+	}
+
+	"Spechud_TankPass1"
+	{
+		"en"		"1st"
+	}
+
+	"Spechud_TankPass2"
+	{
+		"en"		"2nd"
+	}
+
+	"Spechud_TankPass3"
+	{
+		"en"		"3rd"
+	}
+
+	"Spechud_TankPassN"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1}th"
+	}
+
+	"Spechud_Ordinal1"
+	{
+		"en"		"1st"
+	}
+
+	"Spechud_Ordinal2"
+	{
+		"en"		"2nd"
+	}
+}

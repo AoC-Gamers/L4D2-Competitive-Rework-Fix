@@ -24,7 +24,7 @@
 	}
 	"PoppedBot"
 	{
-		"es"		"Un boomer fue {blue}pop{default} por {olive}%N{default}."
+		"es"		"Un Boomer fue {blue}pop{default} por {olive}%N{default}."
 	}
     // charger level
 	"Leveled"
@@ -55,7 +55,7 @@
 	}
 	"DeadstoppedBot"
 	{
-		"es"		"{olive}%N{default} realizo un {blue}deadstopped{default} a un {olive}hunter{default}"
+		"es"		"{olive}%N{default} realizo un {blue}deadstopped{default} a un {olive}Hunter{default}"
 	}
 	// shove
 	"Shoved"
@@ -74,7 +74,7 @@
 	}
 	"TeamSkeetedBot"
 	{
-		"es"		"Un {olive}hunter{default} fue {blue}skeet{default} en equipo."
+		"es"		"Un {olive}Hunter{default} fue {blue}skeet{default} en equipo."
 	}
 	"Skeeted"
 	{
@@ -84,7 +84,7 @@
 	"SkeetedBot"
 	{
         "#format"   "{1:N}" // 1:attacker
-		"es"		"{olive}{1}{default} realizo un {blue}skeet{default} a un {olive}hunter{default}."
+		"es"		"{olive}{1}{default} realizo un {blue}skeet{default} a un {olive}Hunter{default}."
 	}
 	"SkeetedMelee"
 	{
@@ -94,7 +94,7 @@
 	"SkeetedMeleeBot"
 	{
         "#format"   "{1:N}" // 1:attacker
-		"es"		"{olive}{1}{default} realizo un {blue}melee-skeet{default} a un {olive}hunter{default}."
+		"es"		"{olive}{1}{default} realizo un {blue}melee-skeet{default} a un {olive}Hunter{default}."
 	}
 	"SkeetedHeadShot"
 	{
@@ -104,7 +104,7 @@
 	"SkeetedHeadShotBot"
 	{
         "#format"   "{1:N}" // 1:attacker
-		"es"		"{olive}{1}{default} realizo un {blue}headshot-skeet{default} a un {olive}hunter{default}."
+		"es"		"{olive}{1}{default} realizo un {blue}headshot-skeet{default} a un {olive}Hunter{default}."
 	}
 	"SkeetedGrenade"
 	{
@@ -114,7 +114,7 @@
 	"SkeetedGrenadeBot"
 	{
         "#format"   "{1:N}" // 1:attacker
-		"es"		"{olive}{1}{default} realizo un {blue}grenade-skeet{default} a un {olive}hunter{default}."
+		"es"		"{olive}{1}{default} realizo un {blue}grenade-skeet{default} a un {olive}Hunter{default}."
 	}
 	"Melee"
 	{
@@ -142,12 +142,12 @@
 	"HurtSkeetUnchipped"
 	{
         "#format"   "{1:N},{2:i}" // 1:victim 2:damage
-		"es"		"{olive}{1}{default} fue {green}chip-skeet{default} ({blue}{2}{default} daño). Habria sido skeet si el hunter no estuviera chipeado."
+		"es"		"{olive}{1}{default} fue {green}chip-skeet{default} ({blue}{2}{default} daño). Habria sido skeet si el Hunter no estuviera chipeado."
 	}
 	"HurtSkeetUnchippedBot"
 	{
         "#format"   "{1:i}" // 1:damage
-		"es"		"{olive}Hunter{default} fue {green}chip-skeet{default} ({blue}{1}{default} daño). Habria sido skeet si el hunter no estuviera chipeado."
+		"es"		"{olive}Hunter{default} fue {green}chip-skeet{default} ({blue}{1}{default} daño). Habria sido skeet si el Hunter no estuviera chipeado."
 	}
 	"Unchipped"
 	{
@@ -157,22 +157,22 @@
 	"CrownedWitch"
 	{
         "#format"   "{1:N},{2:i}" // 1:attacker 2:damage
-		"es"		"{olive}{1}{default} realizo un crown a la witch ({blue}{2}{default} damage)."
+		"es"		"{olive}{1}{default} realizo un crown a la Witch ({blue}{2}{default} damage)."
 	}
 	"CrownedWitch2"
 	{
-		"es"		"La witch fue {blue}crown{default}."
+		"es"		"La Witch fue {blue}crown{default}."
 	}
     // drawcrown
 	"DrawCrowned"
 	{
         "#format"   "{1:N},{2:i},{3:i}" // 1:attacker 2:damage 3:chipdamage
-		"es"		"{olive}{1}{default} realizo un draw-crowned a la witch ({blue}{2}{default} daño, {olive}{3}{default} chip)."
+		"es"		"{olive}{1}{default} realizo un draw-crowned a la Witch ({blue}{2}{default} daño, {olive}{3}{default} chip)."
 	}
 	"DrawCrowned2"
 	{
         "#format"   "{1:i},{2:i}" // 1:damage 2:chipdamage
-		"es"		"La witch fue draw-crowned ({blue}{1}{default} daño, {olive}{2}{default} chip)."
+		"es"		"La Witch fue draw-crowned ({blue}{1}{default} daño, {olive}{2}{default} chip)."
 	}
     // smoker clears
 	"CutTongue"
@@ -182,7 +182,7 @@
 	}
 	"CutTongueBot"
 	{
-		"es"		"{olive}%N{default} {blue}Corto la lengua{default} del smoker"
+		"es"		"{olive}%N{default} {blue}Corto la lengua{default} del Smoker"
 	}
 	"SelfClearedTongue"
 	{
@@ -248,7 +248,7 @@
 	"DeathChargedBot"
 	{
         "#format"   "{1:N},{2:i}" // 1:victim 2:RoundFloat(height)
-		"es"		"Un {olive}charger{default} elimino a {olive}{1}{default} ({red}altura{default}: {red}{2}{default})"
+		"es"		"Un {olive}Charger{default} elimino a {olive}{1}{default} ({red}altura{default}: {red}{2}{default})"
 	}
 	"DeathChargedBowling"
 	{
@@ -258,7 +258,7 @@
 	"DeathChargedBowlingBot"
 	{
         "#format"   "{1:N},{2:i}" // 1:victim 2:RoundFloat(height)
-		"es"		"Un {olive}charger{default} elimino a {olive}{1}{default} por colision ({red}altura{default}: {red}{2}{default})"
+		"es"		"Un {olive}Charger{default} elimino a {olive}{1}{default} por colision ({red}altura{default}: {red}{2}{default})"
 	}
 	"Bowling"
 	{
@@ -316,15 +316,15 @@
 	}
 	"CalarmTouchedHunter"
 	{
-		"es"		"Un {olive}hunter{default} obligo a {olive}%N{default} a activar una alarma."
+		"es"		"Un {olive}Hunter{default} obligo a {olive}%N{default} a activar una alarma."
 	}
 	"CalarmTouchedJockey"
 	{	
-		"es"		"Un {olive}jockey{default} obligo a {olive}%N{default} a activar una alarma."
+		"es"		"Un {olive}Jockey{default} obligo a {olive}%N{default} a activar una alarma."
 	}
 	"CalarmTouchedCharger"
 	{
-		"es"		"Un {olive}charger{default} obligo a {olive}%N{default} a activar una alarma."
+		"es"		"Un {olive}Charger{default} obligo a {olive}%N{default} a activar una alarma."
 	}
 	"CalarmTouchedInfected"
 	{
@@ -341,11 +341,11 @@
 	"CalarmBoomer"
 	{
         "#format"   "{1:N},{2:N}" // 1:infected 2:survivor
-		"es"		"{olive}{1}{default} activó una alarma matando al boomer de {olive}{2}{default}."
+		"es"		"{olive}{1}{default} activó una alarma matando al Boomer de {olive}{2}{default}."
 	}
 	"CalarmBoomerBot"
 	{
-		"es"		"{olive}%N{default} activó una alarma matando a un {olive}boomer{default}."
+		"es"		"{olive}%N{default} activó una alarma matando a un {olive}Boomer{default}."
 	}
 	"Calarm"
 	{

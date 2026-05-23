@@ -1,0 +1,325 @@
+"Phrases"
+{
+	"on"
+	{
+		"es"		"{blue}on{default}"
+	}
+	
+	"off"
+	{
+		"es"		"{red}off{default}"
+	}
+
+	"Tag"
+	{
+		"es"		"[{olive}HUD{default}]"
+	}
+	
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t},{2:t}"
+		"es"		"{1} El HUD de espectador ahora está {2}"
+	}
+	
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t},{2:t}"
+		"es"		"{1} El HUD de tanque ahora está {2}"
+	}
+	
+	"Notify_SpechudUsage"
+	{
+		"#format"	"{1:t}"
+		"es"		"{1} Escribe {green}!spechud{default} en el chat para cambiar el {blue}HUD de espectador"
+	}
+	
+	"Notify_TankhudUsage"
+	{
+		"#format"	"{1:t}"
+		"es"		"{1} Escribe {green}!tankhud{default} en el chat para cambiar el {red}HUD de tanque"
+	}
+
+	"Spechud_SurvivorsScavenge"
+	{
+		"#format"	"{1:i},{2:i}"
+		"es"		"->1. Supervivientes [{1} de {2}]"
+	}
+
+	"Spechud_SurvivorsVersusLive"
+	{
+		"#format"	"{1:i}"
+		"es"		"->1. Supervivientes [{1}]"
+	}
+
+	"Spechud_SurvivorsVersus"
+	{
+		"#format"	"{1:i}"
+		"es"		"->1. Supervivientes [{1}]"
+	}
+
+	"Spechud_InfectedScavenge"
+	{
+		"#format"	"{1:i},{2:i}"
+		"es"		"->2. Infectados [{1} de {2}]"
+	}
+
+	"Spechud_InfectedVersus"
+	{
+		"#format"	"{1:i}"
+		"es"		"->2. Infectados [{1}]"
+	}
+
+	"Spechud_TankHeader"
+	{
+		"es"		"->3. Tanque"
+	}
+
+	"Spechud_GameRoundScavenge"
+	{
+		"#format"	"{1:s},{2:i}"
+		"es"		"->3. {1} (R#{2})"
+	}
+
+	"Spechud_GameRoundVersus"
+	{
+		"#format"	"{1:s},{2:i}"
+		"es"		"->3. {1} (R#{2})"
+	}
+
+	"Spechud_BestOf"
+	{
+		"#format"	"{1:i}"
+		"es"		"Mejor de {1}"
+	}
+
+	"Spechud_NoSI"
+	{
+		"es"		"There is no SI at this moment."
+	}
+
+	"Spechud_ServerHeader"
+	{
+		"#format"	"{1:s},{2:i},{3:i},{4:i}"
+		"es"		"Servidor: {1} [Slots {2}/{3} | {4}T]"
+	}
+
+	"Spechud_AccumulatedTime"
+	{
+		"es"		"> Tiempo acumulado"
+	}
+
+	"Spechud_OpponentDuration"
+	{
+		"es"		"> Duración del rival"
+	}
+
+	"Spechud_TankHudTitle"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} :: HUD de Tanque"
+	}
+
+	"Spechud_ControlPlayer"
+	{
+		"#format"	"{1:s},{2:s}"
+		"es"		"Control : {1} ({2})"
+	}
+
+	"Spechud_ControlAI"
+	{
+		"#format"	"{1:s}"
+		"es"		"Control : IA ({1})"
+	}
+
+	"Spechud_HealthDead"
+	{
+		"es"		"Salud  : Muerto"
+	}
+
+	"Spechud_HealthValue"
+	{
+		"#format"	"{1:i},{2:i}"
+		"es"		"Salud  : {1} / {2}%"
+	}
+
+	"Spechud_FrustrationValue"
+	{
+		"#format"	"{1:i}"
+		"es"		"Frustr.  : {1}%"
+	}
+
+	"Spechud_FrustrationAI"
+	{
+		"es"		"Frustr.  : AI"
+	}
+
+	"Spechud_NetworkValue"
+	{
+		"#format"	"{1:i},{2:f}"
+		"es"		"Red: {1}ms / {2}"
+	}
+
+	"Spechud_NetworkValueNoLerp"
+	{
+		"#format"	"{1:i}"
+		"es"		"Red: {1}ms"
+	}
+
+	"Spechud_NetworkAI"
+	{
+		"es"		"Red: IA"
+	}
+
+	"Spechud_OnFireValue"
+	{
+		"#format"	"{1:i}"
+		"es"		"En llamas : {1}s"
+	}
+
+	"Spechud_SurvivorDead"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1}: Muerto"
+	}
+
+	"Spechud_SurvivorHanging"
+	{
+		"#format"	"{1:s},{2:i}"
+		"es"		"{1}: <{2}HP@Colgado>"
+	}
+
+	"Spechud_SurvivorIncap"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s},{5:i}"
+		"es"		"{1}: <{2}HP@{3}> [{4} {5}]"
+	}
+
+	"Spechud_SurvivorBleeding"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s}"
+		"es"		"{1}: {2}HP{3} [{4}]"
+	}
+
+	"Spechud_SurvivorBleedingIncap"
+	{
+		"#format"	"{1:s},{2:i},{3:s},{4:s}"
+		"es"		"{1}: {2}HP (#{3}) [{4}]"
+	}
+
+	"Spechud_InfectedDead"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1}: Muerto"
+	}
+
+	"Spechud_InfectedDeadSpawn"
+	{
+		"#format"	"{1:s},{2:s}"
+		"es"		"{1}: Muerto ({2})"
+	}
+
+	"Spechud_InfectedGhostHealth"
+	{
+		"#format"	"{1:s},{2:s},{3:i}"
+		"es"		"{1}: {2} (Fantasma@{3}HP)"
+	}
+
+	"Spechud_InfectedGhost"
+	{
+		"#format"	"{1:s},{2:s}"
+		"es"		"{1}: {2} (Fantasma)"
+	}
+
+	"Spechud_CooldownSuffix"
+	{
+		"#format"	"{1:i}"
+		"es"		"{1}s"
+	}
+
+	"Spechud_InfectedOnFire"
+	{
+		"#format"	"{1:s},{2:s},{3:i},{4:s}"
+		"es"		"{1}: {2} ({3}HP) [En llamas]{4}"
+	}
+
+	"Spechud_InfectedAlive"
+	{
+		"#format"	"{1:s},{2:s},{3:i},{4:s}"
+		"es"		"{1}: {2} ({3}HP){4}"
+	}
+
+	"Spechud_Spawning"
+	{
+		"es"		"Apareciendo..."
+	}
+
+	"Spechud_TankPassNative"
+	{
+		"es"		"nativo"
+	}
+
+	"Spechud_TankPass1"
+	{
+		"es"		"1.º"
+	}
+
+	"Spechud_TankPass2"
+	{
+		"es"		"2.º"
+	}
+
+	"Spechud_TankPass3"
+	{
+		"es"		"3.º"
+	}
+
+	"Spechud_TankPassN"
+	{
+		"#format"	"{1:i}"
+		"es"		"{1}.º"
+	}
+
+	"Spechud_Ordinal1"
+	{
+		"es"		"1.º"
+	}
+
+	"Spechud_Ordinal2"
+	{
+		"es"		"2.º"
+	}
+
+	"Spechud_BossFlowTank"
+	{
+		"#format"	"{1:s}"
+		"es"		"Tanque: {1}"
+	}
+
+	"Spechud_BossFlowWitch"
+	{
+		"#format"	"{1:s}"
+		"es"		"Bruja: {1}"
+	}
+
+	"Spechud_BossFlowCurrent"
+	{
+		"#format"	"{1:i}"
+		"es"		"Actual: {1}%"
+	}
+
+	"Spechud_BossFlowStatic"
+	{
+		"es"		"Estático"
+	}
+
+	"Spechud_BossFlowEvent"
+	{
+		"es"		"Evento"
+	}
+
+	"Spechud_TankSelection"
+	{
+		"#format"	"{1:s}"
+		"es"		"Tanque: {1}"
+	}
+}

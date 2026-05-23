@@ -28,17 +28,6 @@ stock int MaxInt(int a, int b)
 }
 
 /**
- * @brief Checks whether a client index is within the valid client range.
- *
- * @param client Client index to validate
- * @return True if the index is valid, false otherwise
- */
-stock bool IsValidClientIndex(int client)
-{
-	return (client > 0 && client <= MaxClients);
-}
-
-/**
  * @brief Reads the next activation timer for an infected ability.
  *
  * @param client Client index to inspect
@@ -65,16 +54,6 @@ stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration
 	}
 
 	return false;
-}
-
-/**
- * @brief Returns whether the round is in the second half.
- *
- * @return True when the current round is in the second half, false otherwise
- */
-stock bool InSecondHalfOfRound()
-{
-	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"));
 }
 
 /**
@@ -108,7 +87,7 @@ stock bool IsHangingFromLedge(int client)
  */
 stock int IdentifySurvivor(int client)
 {
-	if (!IsValidClientIndex(client) || !IsClientInGame(client))
+	if (client <= 0 || client > MaxClients || !IsClientInGame(client))
 	{
 		return 8;
 	}
@@ -129,31 +108,22 @@ stock int IdentifySurvivor(int client)
 }
 
 /**
- * @brief Returns reserve ammo for a weapon.
+ * @brief Sorts survivors by their character identity.
  *
- * @param client Client index owning the weapon
- * @param weapon Weapon entity index
- * @return Reserve ammo, or -1 when the weapon is invalid
+ * @param elem1 First client index
+ * @param elem2 Second client index
+ * @param array Sort array
+ * @param hndl Sort handle
+ * @return Comparison result
  */
-stock int GetWeaponExtraAmmo(int client, int weapon)
+stock int SortSurvByCharacter(int elem1, int elem2, const int[] array, Handle hndl)
 {
-	if (weapon <= 0)
-	{
-		return -1;
-	}
+	int sc1 = IdentifySurvivor(elem1);
+	int sc2 = IdentifySurvivor(elem2);
 
-	return L4D_GetReserveAmmo(client, weapon);
-}
-
-/**
- * @brief Returns the current clip ammo for a weapon.
- *
- * @param weapon Weapon entity index
- * @return Clip ammo, or -1 when the weapon is invalid
- */
-stock int GetWeaponClipAmmo(int weapon)
-{
-	return (weapon > 0 ? GetEntProp(weapon, Prop_Send, "m_iClip1") : -1);
+	if (sc1 > sc2) { return 1; }
+	else if (sc1 < sc2) { return -1; }
+	else { return 0; }
 }
 
 /**
@@ -163,47 +133,6 @@ stock int GetWeaponClipAmmo(int weapon)
  * @param name Buffer to receive the name
  * @param length Buffer size
  */
-stock void GetClientFixedName(int client, char[] name, int length)
-{
-	GetClientName(client, name, length);
-
-	ValvePanel_ShiftInvalidString(name, length);
-
-	if (strlen(name) > 18)
-	{
-		name[15] = name[16] = name[17] = '.';
-		name[18] = 0;
-	}
-}
-
-/**
- * @brief Normalizes strings that start with invalid panel characters.
- *
- * @param str String buffer to fix in-place
- * @param maxlen Buffer size
- * @return True when the string was adjusted, false otherwise
- */
-stock bool ValvePanel_ShiftInvalidString(char[] str, int maxlen)
-{
-	switch (str[0])
-	{
-	case '[':
-		{
-			char[] temp = new char[maxlen];
-			strcopy(temp, maxlen, str) + 1;
-			
-			int size = strcopy(str[1], maxlen-1, temp) + 1;
-			
-			str[0] = ' ';
-			str[size < maxlen ? size : maxlen-1] = '\0';
-			
-			return true;
-		}
-	}
-	
-	return false;
-}
-
 /**
  * @brief Returns the accumulated versus progress distance for a team.
  *
@@ -218,40 +147,6 @@ stock int GetVersusProgressDistance(int teamIndex)
 		distance += GameRules_GetProp("m_iVersusDistancePerSurvivor", _, i + 4 * teamIndex);
 	}
 	return distance;
-}
-
-/**
- * @brief Fills the round-by-round scavenge score table.
- *
- * @param arr Output score table indexed by team and round
- */
-stock void FillScavengeScores(int arr[2][5])
-{
-	for (int i = 1; i <= GetScavengeRoundLimit(); ++i)
-	{
-		arr[0][i-1] = GetScavengeTeamScore(0, i);
-		arr[1][i-1] = GetScavengeTeamScore(1, i);
-	}
-}
-
-/**
- * @brief Formats a scavenge round duration for display.
- *
- * @param buffer Buffer to receive the formatted time
- * @param maxlen Buffer size
- * @param teamIndex Team index to inspect
- * @param nodecimalpoint True to omit decimal places
- * @return Number of characters written
- */
-stock int FormatScavengeRoundTime(char[] buffer, int maxlen, int teamIndex, bool nodecimalpoint = false)
-{
-	float seconds = GetScavengeRoundDuration(teamIndex);
-	int minutes = RoundToFloor(seconds) / 60;
-	seconds -= 60 * minutes;
-	
-	return nodecimalpoint ?
-				Format(buffer, maxlen, "%d:%02.0f", minutes, seconds) :
-				Format(buffer, maxlen, "%d:%05.2f", minutes, seconds);
 }
 
 /**

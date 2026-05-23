@@ -3,6 +3,8 @@
 #endif
 #define _readyup_player_included
 
+#include <client_name_helpers>
+
 static bool
 	isPlayerReady[MAXPLAYERS+1],
 	hiddenPanel[MAXPLAYERS+1];
@@ -75,20 +77,6 @@ void SetButtonTime(int client)
 bool IsPlayerAfk(int client)
 {
 	return GetEngineTime() - buttonTime[client] > AFK_DURATION;
-}
-
-void GetClientFixedName(int client, char[] name, int length)
-{
-	GetClientName(client, name, length);
-
-	if (name[0] == '[')
-	{
-		char temp[MAX_NAME_LENGTH];
-		strcopy(temp, sizeof(temp), name);
-		temp[sizeof(temp)-2] = 0;
-		strcopy(name[1], length-1, temp);
-		name[0] = ' ';
-	}
 }
 
 void SetClientFrozen(int client, bool freeze)

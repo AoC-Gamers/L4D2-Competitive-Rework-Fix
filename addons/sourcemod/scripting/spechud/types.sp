@@ -27,6 +27,7 @@ float g_fTankBurnDuration;
 
 ConVar g_cvTankPercent;
 ConVar g_cvWitchPercent;
+ConVar g_cvReadyServerCvar;
 ConVar g_hServerNamer;
 ConVar g_cvReadyCfgName;
 
@@ -169,8 +170,8 @@ enum struct InfectedSnapshot
 enum struct RuntimeState
 {
 	bool lateload;
-	bool readyUpAvailable;
-	bool pauseAvailable;
+	bool readyUp;
+	bool pause;
 	bool l4dBossPercent;
 	bool hybridScoremodZone;
 	bool hybridScoremod;
@@ -187,8 +188,8 @@ enum struct RuntimeState
 	void Reset()
 	{
 		this.lateload = false;
-		this.readyUpAvailable = false;
-		this.pauseAvailable = false;
+		this.readyUp = false;
+		this.pause = false;
 		this.l4dBossPercent = false;
 		this.hybridScoremodZone = false;
 		this.hybridScoremod = false;
@@ -205,8 +206,8 @@ enum struct RuntimeState
 	 */
 	void Refresh()
 	{
-		this.readyUpAvailable = LibraryExists(LIBRARY_READYUP);
-		this.pauseAvailable = LibraryExists(LIBRARY_PAUSE);
+		this.readyUp = LibraryExists(LIBRARY_READYUP);
+		this.pause = LibraryExists(LIBRARY_PAUSE);
 		this.l4dBossPercent = LibraryExists(LIBRARY_L4D_BOSS_PERCENT);
 		this.hybridScoremodZone = LibraryExists(LIBRARY_L4D2_HYBRID_SCOREMOD_ZONE);
 		this.hybridScoremod = LibraryExists(LIBRARY_L4D2_HYBRID_SCOREMOD);

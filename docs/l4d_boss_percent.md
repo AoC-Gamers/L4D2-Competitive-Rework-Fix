@@ -48,3 +48,5 @@ El include `l4d2_boss_percents.inc` ahora declara el forward para que otros plug
 ## Resultado
 
 `l4d_boss_percent` ahora actúa como fuente de verdad para los porcentajes almacenados y notifica los cambios en vez de obligar a otros plugins a consultarlos en bucle.
+
+`spechud` es uno de los consumidores previstos de ese forward y usa la notificación para cachear estado de HUD sin polling directo.

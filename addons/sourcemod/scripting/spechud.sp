@@ -16,6 +16,7 @@
 #include <l4d_tank_control_eq>
 #include <lerpmonitor>
 #include <witch_and_tankifier>
+#include <client_name_helpers>
 
 #include "spechud/types.sp"
 #include "spechud/helpers.sp"
@@ -49,15 +50,11 @@ public void OnPluginStart()
 	g_BossFlow.Reset();
 	g_BossRound.Reset();
 	InitTankSpawnSchemeMaps();
+	InitHookEvent();
 	
 	RegConsoleCmd("sm_spechud", ToggleSpecHudCmd);
 	RegConsoleCmd("sm_tankhud", ToggleTankHudCmd);
-	
-	HookEvent("round_start",		Event_RoundStart,		EventHookMode_PostNoCopy);
-	HookEvent("round_end",			Event_RoundEnd,			EventHookMode_PostNoCopy);
-	HookEvent("player_death",		Event_PlayerDeath,		EventHookMode_Post);
-	HookEvent("witch_killed",		Event_WitchDeath,		EventHookMode_PostNoCopy);
-	HookEvent("player_team",		Event_PlayerTeam,		EventHookMode_Post);
+
 	
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -90,8 +87,14 @@ public void OnAllPluginsLoaded()
 public void OnLibraryAdded(const char[] name)
 {
 	g_Runtime.Refresh();
+	if (StrEqual(name, LIBRARY_READYUP))
+	{
+		RefreshServerNameCache();
+		RefreshReadyCfgName();
+	}
 	if (StrEqual(name, LIBRARY_L4D_BOSS_PERCENT))
 	{
+		RefreshBossPercentHandles();
 		RefreshBossPercentCache();
 	}
 }
@@ -99,8 +102,30 @@ public void OnLibraryAdded(const char[] name)
 public void OnLibraryRemoved(const char[] name)
 {
 	g_Runtime.Refresh();
+	if (StrEqual(name, LIBRARY_READYUP))
+	{
+		if (g_cvReadyServerCvar != null)
+		{
+			g_cvReadyServerCvar.RemoveChangeHook(ReadyServerCvarChanged);
+		}
+		if (g_hServerNamer != null)
+		{
+			g_hServerNamer.RemoveChangeHook(ServerCvarChanged);
+		}
+		if (g_cvReadyCfgName != null)
+		{
+			g_cvReadyCfgName.RemoveChangeHook(ReadyCfgChanged);
+		}
+		g_cvReadyServerCvar = null;
+		g_hServerNamer = null;
+		g_cvReadyCfgName = null;
+		g_sHostname[0] = '\0';
+		g_sReadyCfgName[0] = '\0';
+	}
 	if (StrEqual(name, LIBRARY_L4D_BOSS_PERCENT))
 	{
+		g_cvTankPercent = null;
+		g_cvWitchPercent = null;
 		g_BossFlow.Reset();
 	}
 }
@@ -119,13 +144,8 @@ void RefreshBossPercentCache()
 		return;
 	}
 
-	g_BossFlow.tankPercent = (GetFeatureStatus(FeatureType_Native, "GetStoredTankPercent") != FeatureStatus_Unknown)
-		? GetStoredTankPercent()
-		: -1;
-
-	g_BossFlow.witchPercent = (GetFeatureStatus(FeatureType_Native, "GetStoredWitchPercent") != FeatureStatus_Unknown)
-		? GetStoredWitchPercent()
-		: -1;
+	g_BossFlow.tankPercent = GetStoredTankPercent();
+	g_BossFlow.witchPercent = GetStoredWitchPercent();
 
 	g_BossFlow.synced = true;
 }
@@ -148,7 +168,15 @@ void GameConVarChanged(ConVar convar, const char[] oldValue, const char[] newVal
 
 void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_cvTankBurnDuration.GetString(g_sReadyCfgName, sizeof(g_sReadyCfgName));
+	if (g_hServerNamer != null)
+	{
+		g_hServerNamer.GetString(g_sHostname, sizeof(g_sHostname));
+	}
+}
+
+void ReadyServerCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	RefreshServerNameCache();
 }
 
 void ReadyCfgChanged(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -173,10 +201,20 @@ void RefreshBossPercentHandles()
 void RefreshServerNameCache()
 {
 	ConVar convar = null;
-	if ((convar = FindConVar("l4d_ready_server_cvar")) != null)
+
+	if (g_Runtime.readyUp)
 	{
+		if (g_cvReadyServerCvar == null)
+		{
+			g_cvReadyServerCvar = FindConVar("l4d_ready_server_cvar");
+			if (g_cvReadyServerCvar != null)
+			{
+				g_cvReadyServerCvar.AddChangeHook(ReadyServerCvarChanged);
+			}
+		}
+
 		char buffer[64];
-		convar.GetString(buffer, sizeof(buffer));
+		g_cvReadyServerCvar.GetString(buffer, sizeof(buffer));
 		convar = FindConVar(buffer);
 	}
 
@@ -185,25 +223,45 @@ void RefreshServerNameCache()
 		convar = FindConVar("hostname");
 	}
 
-	if (g_hServerNamer == null)
+	if (g_hServerNamer != convar)
 	{
+		if (g_hServerNamer != null)
+		{
+			g_hServerNamer.RemoveChangeHook(ServerCvarChanged);
+		}
+
 		g_hServerNamer = convar;
-		g_hServerNamer.AddChangeHook(ServerCvarChanged);
-	}
-	else if (g_hServerNamer != convar)
-	{
-		g_hServerNamer = convar;
-		g_hServerNamer.AddChangeHook(ServerCvarChanged);
+		if (g_hServerNamer != null)
+		{
+			g_hServerNamer.AddChangeHook(ServerCvarChanged);
+		}
 	}
 
-	g_hServerNamer.GetString(g_sHostname, sizeof(g_sHostname));
+	if (g_hServerNamer != null)
+	{
+		g_hServerNamer.GetString(g_sHostname, sizeof(g_sHostname));
+	}
+	else
+	{
+		g_sHostname[0] = '\0';
+	}
 }
 
 void RefreshReadyCfgName()
 {
-	if (g_cvReadyCfgName == null && (g_cvReadyCfgName = FindConVar("l4d_ready_cfg_name")) != null)
+	if (!g_Runtime.readyUp)
 	{
-		g_cvReadyCfgName.AddChangeHook(ReadyCfgChanged);
+		g_sReadyCfgName[0] = '\0';
+		return;
+	}
+
+	if (g_cvReadyCfgName == null)
+	{
+		g_cvReadyCfgName = FindConVar("l4d_ready_cfg_name");
+		if (g_cvReadyCfgName != null)
+		{
+			g_cvReadyCfgName.AddChangeHook(ReadyCfgChanged);
+		}
 	}
 
 	if (g_cvReadyCfgName != null)

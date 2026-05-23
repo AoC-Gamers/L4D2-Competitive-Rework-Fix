@@ -33,6 +33,9 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     copy_if_exists(addons_dir, output_dir / "addons")
+    plugins_dir = output_dir / "addons" / "sourcemod" / "plugins"
+    for bucket in ("anticheat", "fixes", "optional"):
+        (plugins_dir / bucket).mkdir(parents=True, exist_ok=True)
     copy_if_exists(root_dir / "README.md", output_dir / "README.md")
     copy_if_exists(root_dir / "plugin-package-map.json", output_dir / "plugin-package-map.json")
     copy_if_exists(root_dir / "docs", output_dir / "docs")

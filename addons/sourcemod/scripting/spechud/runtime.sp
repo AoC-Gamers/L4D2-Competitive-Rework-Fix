@@ -1,36 +1,4 @@
-#pragma semicolon 1
-#pragma newdecls required
-
-#include <sourcemod>
-#include <sdktools>
-#include <builtinvotes>
-#include <left4dhooks>
-#include <colors>
-#include <l4d2util_weapons>
-#include <readyup>
-#include <pause>
-#include <l4d2_boss_percents>
-#include <l4d2_hybrid_scoremod_zone>
-#include <l4d2_scoremod>
-#include <l4d2_health_temp_bonus>
-#include <l4d_tank_control_eq>
-#include <lerpmonitor>
-#include <witch_and_tankifier>
-
-#include "spechud/types.sp"
-#include "spechud/helpers.sp"
-#include "spechud/runtime.sp"
-#include "spechud/render.sp"
-
-public Plugin myinfo =
-{
-	name = "Hyper-V HUD Manager",
-	author = "Visor, Forgetest",
-	description = "Provides different HUDs for spectators",
-	version = "3.9.0",
-	url = "https://github.com/AoC-Gamers/L4D2-Competitive-Rework-Fix"
-};
-
+ #if 0
 public void OnPluginStart()
 {
 	LoadPluginTranslations();
@@ -84,7 +52,6 @@ public void OnAllPluginsLoaded()
 	RefreshServerNameCache();
 	RefreshReadyCfgName();
 	RefreshBossPercentCache();
-	g_BossRound.Reset();
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -166,44 +133,36 @@ void RefreshCachedCvars()
 
 void RefreshBossPercentHandles()
 {
-	g_cvTankPercent = FindConVar("l4d_tank_percent");
-	g_cvWitchPercent = FindConVar("l4d_witch_percent");
+	g_cvTankPercent = FindConVar("tank_burn_duration");
+	g_cvWitchPercent = FindConVar("tank_burn_duration");
 }
 
 void RefreshServerNameCache()
 {
-	ConVar convar = null;
-	if ((convar = FindConVar("l4d_ready_server_cvar")) != null)
-	{
-		char buffer[64];
-		convar.GetString(buffer, sizeof(buffer));
-		convar = FindConVar(buffer);
-	}
-
-	if (convar == null)
-	{
-		convar = FindConVar("hostname");
-	}
-
 	if (g_hServerNamer == null)
 	{
-		g_hServerNamer = convar;
-		g_hServerNamer.AddChangeHook(ServerCvarChanged);
-	}
-	else if (g_hServerNamer != convar)
-	{
-		g_hServerNamer = convar;
-		g_hServerNamer.AddChangeHook(ServerCvarChanged);
+		g_hServerNamer = FindConVar("hostname");
+		if (g_hServerNamer != null)
+		{
+			g_hServerNamer.AddChangeHook(ServerCvarChanged);
+		}
 	}
 
-	g_hServerNamer.GetString(g_sHostname, sizeof(g_sHostname));
+	if (g_hServerNamer != null)
+	{
+		g_hServerNamer.GetString(g_sHostname, sizeof(g_sHostname));
+	}
 }
 
 void RefreshReadyCfgName()
 {
-	if (g_cvReadyCfgName == null && (g_cvReadyCfgName = FindConVar("l4d_ready_cfg_name")) != null)
+	if (g_cvReadyCfgName == null)
 	{
-		g_cvReadyCfgName.AddChangeHook(ReadyCfgChanged);
+		g_cvReadyCfgName = FindConVar("l4d_ready_cfg_name");
+		if (g_cvReadyCfgName != null)
+		{
+			g_cvReadyCfgName.AddChangeHook(ReadyCfgChanged);
+		}
 	}
 
 	if (g_cvReadyCfgName != null)
@@ -216,7 +175,12 @@ public void L4D_OnGameModeChange(int gamemode)
 {
 	g_iGamemode = gamemode;
 }
+#endif
 
+#if 0
+// ======================================================================
+//  Bosses Caching
+// ======================================================================
 void AddStaticTankMapEntries()
 {
 	// Haunted Forest 3
@@ -259,5 +223,142 @@ Action SetFinaleExceptionMap(int args)
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	g_hFinaleExceptionMaps.SetValue(mapname, true);
+	return Plugin_Handled;
+}
+#endif
+
+// ======================================================================
+//  Forwards
+// ======================================================================
+public void OnClientDisconnect(int client)
+{
+	g_bSpecHudHintShown[client] = false;
+	g_bTankHudHintShown[client] = false;
+}
+
+public void OnMapStart() { g_bRoundLive = false; }
+public void OnRoundIsLive()
+{
+	RefreshReadyCfgName();
+	RefreshBossPercentCache();
+	
+	g_bRoundLive = true;
+	
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && L4D_GetClientTeam(i) == L4DTeam_Spectator && !IsClientSourceTV(i))
+			FakeClientCommand(i, "sm_spectate");
+	}
+	
+	if (g_iGamemode == GAMEMODE_VERSUS)
+	{
+		g_BossRound.roundHasFlowTank = RoundHasFlowTank();
+		g_BossRound.roundHasFlowWitch = RoundHasFlowWitch();
+		g_BossRound.flowTankActive = g_BossRound.roundHasFlowTank;
+		
+		g_BossRound.customBossSys = IsDarkCarniRemix();
+		
+		g_bStaticTank = g_Runtime.witchAndTankifier && IsStaticTankMap();
+		g_bStaticWitch = g_Runtime.witchAndTankifier && IsStaticWitchMap();
+		
+		g_iMaxDistance = L4D_GetVersusMaxCompletionScore() / 4 * g_iSurvivorLimit;
+		
+		g_BossRound.tankCount = 0;
+		g_BossRound.witchCount = 0;
+		
+		if (g_cvTankPercent != null && g_cvTankPercent.BoolValue)
+		{
+			g_BossRound.tankCount = 1;
+			
+			char mapname[64];
+			bool dummy;
+			GetCurrentMap(mapname, sizeof(mapname));
+			
+			// TODO: individual plugin served as an interface to tank counts?
+			if (g_hCustomTankScriptMaps.GetValue(mapname, dummy)) g_BossRound.tankCount += 1;
+			
+			else if (!g_BossRound.customBossSys && L4D_IsMissionFinalMap())
+			{
+				g_BossRound.tankCount = 3
+							- view_as<int>(g_hFirstTankSpawningScheme.GetValue(mapname, dummy))
+							- view_as<int>(g_hSecondTankSpawningScheme.GetValue(mapname, dummy))
+							- view_as<int>(g_hFinaleExceptionMaps.Size > 0 && !g_hFinaleExceptionMaps.GetValue(mapname, dummy))
+							- view_as<int>(g_bStaticTank);
+			}
+		}
+		
+		if (g_cvWitchPercent != null && g_cvWitchPercent.BoolValue)
+		{
+			g_BossRound.witchCount = 1;
+		}
+	}
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bRoundLive = false;
+}
+
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bRoundLive = false;
+}
+
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!client || L4D_GetClientTeam(client) != L4DTeam_Infected) return;
+	
+	if (L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Tank)
+	{
+		if (g_BossRound.tankCount > 0) g_BossRound.tankCount--;
+		if (!RoundHasFlowTank()) g_BossRound.flowTankActive = false;
+	}
+}
+
+void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	if (g_BossRound.witchCount > 0) g_BossRound.witchCount--;
+}
+
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!client) return;
+	
+	int team = event.GetInt("team");
+	
+	if (view_as<L4DTeam>(team) == L4DTeam_Unassigned)
+	{
+		g_bSpecHudActive[client] = false;
+		g_bTankHudActive[client] = true;
+	}
+}
+
+Action ToggleSpecHudCmd(int client, int args)
+{
+	if (!IsValidClientIndex(client) || !IsClientInGame(client))
+		return Plugin_Handled;
+	
+	if (L4D_GetClientTeam(client) != L4DTeam_Spectator)
+		return Plugin_Handled;
+	
+	g_bSpecHudActive[client] = !g_bSpecHudActive[client];
+	
+	CPrintToChat(client, "%t", "Notify_SpechudState", "Tag", (g_bSpecHudActive[client] ? "on" : "off"));
+	return Plugin_Handled;
+}
+
+Action ToggleTankHudCmd(int client, int args)
+{
+	if (!IsValidClientIndex(client) || !IsClientInGame(client))
+		return Plugin_Handled;
+	
+	if (L4D_GetClientTeam(client) == L4DTeam_Survivor)
+		return Plugin_Handled;
+	
+	g_bTankHudActive[client] = !g_bTankHudActive[client];
+	
+	CPrintToChat(client, "%t", "Notify_TankhudState", "Tag", (g_bTankHudActive[client] ? "on" : "off"));
 	return Plugin_Handled;
 }

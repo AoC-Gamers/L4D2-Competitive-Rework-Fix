@@ -1,85 +1,143 @@
-# Cambios de `l4d_tank_control_eq`
+# `l4d_tank_control_eq`
 
 ## Alcance
 
-Este documento describe las nuevas adiciones a la API pública realizadas en:
+Este documento describe la API pública y los cambios internos actuales de:
 
 - [l4d_tank_control_eq.sp](C:/GitHub/L4D2-Competitive-Rework-Fix/addons/sourcemod/scripting/l4d_tank_control_eq.sp)
 - [l4d_tank_control_eq.inc](C:/GitHub/L4D2-Competitive-Rework-Fix/addons/sourcemod/scripting/include/l4d_tank_control_eq.inc)
 
-El objetivo de estos cambios es exponer un ciclo de vida estable del Tank y señales reales de cambio de control, para que los plugins externos puedan consumir la propiedad del Tank con menos suposiciones en tiempo de ejecución.
+El objetivo es exponer un `tankId` estable para el mismo Tank durante toda su vida en la ronda, distinguir Tanks `primary` y `substitute`, y entregar señales confirmadas de cambio de control.
 
 ## Motivación
 
-La API pública anterior solo exponía:
+La API histórica de este plugin era suficiente para:
 
-- `GetTankSelection()`
-- `TankControl_OnTryOfferingTankBot(char sQueuedTank[64])`
-- `TankControl_OnTankSelection(char sQueuedTank[64])`
+- elegir quién sería el Tank
+- inspeccionar o sobreescribir la cola
 
-Eso bastaba para anular o inspeccionar la selección de la cola, pero no era suficiente para modelar:
+Pero no bastaba para modelar bien:
 
-- un único ciclo de vida del Tank a través de `bot -> human -> bot -> human`
+- `bot -> humano -> bot -> humano`
 - cambios reales de control
-- el jugador actualmente en espera para reemplazo
-- la continuidad a nivel de ronda del mismo Tank
+- identidad estable del mismo Tank a través de reasignaciones
 
-Esta nueva API mantiene el comportamiento anterior y añade señales conscientes del ciclo de vida.
+La API actual se centra en `tankId` y mantiene las señales de selección existentes.
 
-## Nuevo enum público
+## Modelo semántico
+
+El plugin distingue dos tipos de Tank:
+
+- `primary`
+  - Tank original de la cadena actual
+  - `parentTankId = 0`
+- `substitute`
+  - Tank nuevo que reemplaza a otro Tank terminado
+  - `parentTankId = <tankId previo>`
+
+Esto permite a consumidores distinguir de forma explícita continuidad de control y reemplazo semántico de Tank, sin depender de heurísticas de reconnect o handoff.
+
+## Enum público
 
 ```sourcepawn
-enum TankControlLifecycleEndReason
+enum TankControlEndReason
 {
-	TankControlLifecycleEnd_None = 0,
-	TankControlLifecycleEnd_TankDied,
-	TankControlLifecycleEnd_RoundEnded
+	TankControlEnd_None = 0,
+	TankControlEnd_TankDied,
+	TankControlEnd_RoundEnded
 }
 ```
 
-## Nuevos natives
+```sourcepawn
+enum TankControlStartReason
+{
+	TankControlStart_Unknown = 0,
+	TankControlStart_Primary,
+	TankControlStart_Substitute
+}
+```
 
-### `TankControl_GetActiveTankLifecycleId()`
+## Natives públicos
 
-Devuelve el id del ciclo de vida del Tank que está siendo rastreado activamente.
+### `GetTankSelection()`
 
-- devuelve `0` si no hay un ciclo de vida activo del Tank
+Devuelve el cliente seleccionado para recibir el Tank.
+
+- devuelve `-1` si no hay nadie seleccionado
+
+### `TankControl_GetActiveTankId()`
+
+Devuelve el `tankId` activo.
+
+- devuelve `0` si no hay un Tank activo
 
 ### `TankControl_GetCurrentTankClient()`
 
-Devuelve el índice del cliente que controla actualmente al Tank.
+Devuelve el cliente que controla actualmente el Tank.
 
-- devuelve `-1` si no hay un ciclo de vida activo del Tank
+- devuelve `-1` si no hay un Tank activo
 
 ### `TankControl_GetPendingTankClient()`
 
-Devuelve el índice del cliente actualmente en cola para el Tank.
+Devuelve el cliente en cola para recibir el Tank.
 
-- devuelve `-1` si no hay un jugador de Tank en cola disponible
+- devuelve `-1` si no hay un jugador en cola válido
 
-### `TankControl_GetClientTankLifecycleId(int client)`
+### `TankControl_GetClientTankId(int client)`
 
-Devuelve el id del ciclo de vida del Tank activo asociado a un cliente.
+Devuelve el `tankId` activo asociado a un cliente.
 
 Un cliente queda asociado cuando coincide con:
 
 - el controlador actual del Tank
-- o el jugador de reemplazo actualmente en cola
+- el jugador actualmente en cola para recibirlo
 
-- devuelve `0` si el cliente no está asociado al ciclo de vida activo del Tank
+- devuelve `0` si el cliente no está asociado al Tank activo
 
-## Nuevos forwards
+### `TankControl_IsSubstituteTank(int tankId)`
 
-### `TankControl_OnTankLifecycleStarted(int lifecycleId, int client, bool isBot)`
+Devuelve si el `tankId` activo representa un Tank sustituto.
 
-Se dispara cuando comienza un nuevo ciclo de vida rastreado del Tank.
+### `TankControl_GetParentTankId(int tankId)`
+
+Devuelve el `tankId` padre de un Tank sustituto.
+
+- devuelve `0` si el Tank no tiene padre
+
+### `TankControl_GetTankStartReason(int tankId)`
+
+Devuelve la razón semántica de inicio del Tank:
+
+- `TankControlStart_Primary`
+- `TankControlStart_Substitute`
+
+## Forwards públicos
+
+### `TankControl_OnTryOfferingTankBot(char sQueuedTank[64])`
+
+Se dispara antes de finalizar a quién se intentará dar el Tank desde la IA.
+
+### `TankControl_OnTankSelection(char sQueuedTank[64])`
+
+Se dispara cuando el plugin selecciona a un jugador en cola para el Tank.
+
+### `TankControl_OnTankStarted(int tankId, int client, bool isBot)`
+
+Se dispara cuando comienza un Tank rastreado nuevo.
 
 Implementación actual:
 
-- comienza desde `L4D_OnTryOfferingTankBot(...)`
-- el controlador inicial suele ser el Tank IA
+- nace desde `L4D_OnTryOfferingTankBot(...)`
+- el primer controlador suele ser la IA
 
-### `TankControl_OnTankControlChanged(int lifecycleId, int oldClient, int newClient, bool oldWasBot, bool newWasBot)`
+### `TankControl_OnTankStartedEx(int tankId, int client, bool isBot, TankControlStartReason startReason, int parentTankId)`
+
+Se dispara junto al forward histórico, pero además expone:
+
+- si el Tank es `primary` o `substitute`
+- el `parentTankId` cuando el Tank es sustituto
+
+### `TankControl_OnTankControlChanged(int tankId, int oldClient, int newClient, bool oldWasBot, bool newWasBot)`
 
 Se dispara cuando cambia el control del Tank rastreado.
 
@@ -87,28 +145,31 @@ Implementación actual:
 
 - se activa desde `L4D2_OnTankPassControl(...)`
 
-Este es el forward principal para plugins externos que necesiten seguir cambios reales de propiedad del Tank.
+Este es el forward principal para consumidores que necesiten seguir handoffs reales del Tank.
 
-### `TankControl_OnTankLifecycleEnded(int lifecycleId, TankControlLifecycleEndReason reason)`
+### `TankControl_OnTankEnded(int tankId, TankControlEndReason reason)`
 
-Se dispara cuando termina el ciclo de vida rastreado del Tank.
+Se dispara cuando termina el Tank rastreado.
 
 Implementación actual:
 
-- `TankControlLifecycleEnd_TankDied`
-  - desde `player_death` cuando el Tank muere
-- `TankControlLifecycleEnd_RoundEnded`
+- `TankControlEnd_TankDied`
+  - desde `player_death`
+- `TankControlEnd_RoundEnded`
   - desde `round_end`
 
-## Nuevo estado interno en tiempo de ejecución
+## Estado interno
 
-Ahora el plugin rastrea el estado del Tank mediante contenedores tipados en lugar de globals planos.
+El runtime ya no usa globals sueltas para el estado principal del Tank. Ahora encapsula el estado en `enum struct`.
 
-### `TankLifecycleState`
+### `TankControlState`
 
-Contenedor interno del ciclo de vida:
+Contenedor interno del Tank activo:
 
 - `id`
+- `parentTankId`
+- `startReason`
+- `isSubstitute`
 - `currentClient`
 - `pendingClient`
 - `disconnectFrustration`
@@ -117,11 +178,11 @@ Contenedor interno del ciclo de vida:
 
 Respaldado por:
 
-- `g_TankLifecycle`
+- `g_TankControl`
 
 ### `TankSelectionState`
 
-Contenedor interno de la selección:
+Contenedor interno de selección:
 
 - `queuedSteamId`
 - `initialSteamId`
@@ -131,19 +192,18 @@ Respaldado por:
 
 - `g_TankSelection`
 
-El estado global relacionado todavía se mantiene por separado:
+Además, el serial incremental del `tankId` se mantiene en:
 
-- `g_iTankLifecycleSerial`
+- `g_iTankIdSerial`
+- `g_iPendingSubstituteParentTankId`
 
-Estos son detalles de implementación interna que soportan la API pública.
+## Tipado y helpers
 
-## Limpieza del tipado en runtime
-
-El plugin ahora reutiliza helpers tipados de:
+El plugin reutiliza tipado de:
 
 - [left4dhooks_stocks.inc](C:/GitHub/L4D2-Competitive-Rework-Fix/addons/sourcemod/scripting/include/left4dhooks_stocks.inc)
 
-En lugar de usar definiciones locales `#define` para team/class.
+En lugar de `#define` locales para team/class.
 
 El runtime actual usa:
 
@@ -152,7 +212,7 @@ El runtime actual usa:
 - `L4D_GetClientTeam(...)`
 - `L4D2_GetPlayerZombieClass(...)`
 
-Se introdujeron helpers booleanos locales:
+Helpers locales actuales:
 
 - `bIsSpectator(...)`
 - `bIsInfected(...)`
@@ -160,62 +220,51 @@ Se introdujeron helpers booleanos locales:
 - `bIsValidSpectator(...)`
 - `bIsTankPlayer(...)`
 
-Esto eliminó definiciones locales del plugin como:
+## Autoconsumo de la biblioteca
 
-- `TEAM_SPECTATOR`
-- `TEAM_INFECTED`
-- `ZOMBIECLASS_TANK`
-- `IS_*`
-
-## Autoconsumo de la API pública
-
-El plugin ahora incluye su propia biblioteca pública:
+El `.sp` incluye su propia biblioteca pública:
 
 - [l4d_tank_control_eq.inc](C:/GitHub/L4D2-Competitive-Rework-Fix/addons/sourcemod/scripting/include/l4d_tank_control_eq.inc)
 
-Esto permite que el runtime reutilice tipos públicos directamente.
+Eso evita duplicar tipos públicos dentro del runtime. Actualmente el caso visible es:
 
-Ejemplo actual:
-
-- `TankControlLifecycleEndReason`
-
-El archivo `.sp` ya no duplica valores locales `#define` para los motivos de fin de ciclo de vida.
+- `TankControlEndReason`
 
 ## Limpieza al descargar el plugin
 
-El plugin ahora realiza limpieza explícita en `OnPluginEnd()`.
+`OnPluginEnd()` realiza limpieza explícita de estado:
 
-Limpieza actual al descargarse:
-
-- `ResetTankLifecycleState()`
+- `ResetTankControlState()`
 - `g_TankSelection.Reset()`
 - `delete g_hWhosHadTank`
 - `delete g_hTankQueue`
 
-Esto busca mantener explícito el apagado del estado en tiempo de ejecución y evitar estado lógico obsoleto durante escenarios de descarga o recarga del plugin.
+Esto no reemplaza la limpieza propia de SourceMod; deja explícito el contrato de apagado del estado interno.
 
-No pretende reemplazar la limpieza propia de SourceMod, sino definir un contrato explícito de apagado para el estado interno de este plugin.
+## Cableado actual del runtime
 
-## API existente preservada
+La implementación actual se apoya en:
 
-La API anterior sigue disponible:
-
-- `GetTankSelection()`
-- `TankControl_OnTryOfferingTankBot(...)`
-- `TankControl_OnTankSelection(...)`
-
-Esto mantiene funcionando a los consumidores antiguos mientras permite que los nuevos consuman señales conscientes del ciclo de vida.
-
-## Cableado actual en runtime
-
-La primera implementación usa estos hooks:
-
-- inicio del ciclo de vida:
+- inicio de Tank:
   - `L4D_OnTryOfferingTankBot(...)`
 - cambio de control:
   - `L4D2_OnTankPassControl(...)`
-- fin del ciclo de vida:
+- fin del Tank:
   - `player_death`
   - `round_end`
-- actualización del jugador en cola:
+- selección y cola:
   - rutas de selección/anulación del Tank
+
+## Reglas de inicio
+
+- si no existe un Tank previo encadenable, nace un Tank `primary`
+- si un Tank termina y el sistema competitivo continúa la cadena con otro Tank, nace un Tank `substitute`
+- un cambio de controller del mismo Tank no crea un `tankId` nuevo
+
+## Uso esperado por consumidores
+
+- seguir continuidad por `tankId`
+- usar `TankControl_OnTankControlChanged(...)` para cambios reales de controller
+- usar `TankControl_OnTankStartedEx(...)` para distinguir:
+  - continuidad del mismo Tank
+  - inicio de un Tank sustituto con `parentTankId`

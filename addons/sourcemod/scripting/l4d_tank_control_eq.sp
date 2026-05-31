@@ -18,15 +18,20 @@ ConVar
 GlobalForward
     g_hForwardOnTryOfferingTankBot,
     g_hForwardOnTankSelection,
-    g_hForwardOnTankLifecycleStarted,
+    g_hForwardOnTankStarted,
+    g_hForwardOnTankStartedEx,
     g_hForwardOnTankControlChanged,
-    g_hForwardOnTankLifecycleEnded;
+    g_hForwardOnTankEnded;
 
-int g_iTankLifecycleSerial = 0;
+int g_iTankIdSerial = 0;
+int g_iPendingSubstituteParentTankId = 0;
 
-enum struct TankLifecycleState
+enum struct TankControlState
 {
 	int id;
+	int parentTankId;
+	TankControlStartReason startReason;
+	bool isSubstitute;
 	int currentClient;
 	int pendingClient;
 	int disconnectFrustration;
@@ -36,6 +41,9 @@ enum struct TankLifecycleState
 	void Reset()
 	{
 		this.id = 0;
+		this.parentTankId = 0;
+		this.startReason = TankControlStart_Unknown;
+		this.isSubstitute = false;
 		this.currentClient = -1;
 		this.pendingClient = -1;
 		this.disconnectFrustration = -1;
@@ -58,42 +66,81 @@ enum struct TankSelectionState
 	}
 }
 
-TankLifecycleState g_TankLifecycle;
+TankControlState g_TankControl;
 TankSelectionState g_TankSelection;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     CreateNative("GetTankSelection", Native_GetTankSelection);
-    CreateNative("TankControl_GetActiveTankLifecycleId", Native_TankControl_GetActiveTankLifecycleId);
+    CreateNative("TankControl_GetActiveTankId", Native_TankControl_GetActiveTankId);
     CreateNative("TankControl_GetCurrentTankClient", Native_TankControl_GetCurrentTankClient);
     CreateNative("TankControl_GetPendingTankClient", Native_TankControl_GetPendingTankClient);
-    CreateNative("TankControl_GetClientTankLifecycleId", Native_TankControl_GetClientTankLifecycleId);
+    CreateNative("TankControl_GetClientTankId", Native_TankControl_GetClientTankId);
+    CreateNative("TankControl_IsSubstituteTank", Native_TankControl_IsSubstituteTank);
+    CreateNative("TankControl_GetParentTankId", Native_TankControl_GetParentTankId);
+    CreateNative("TankControl_GetTankStartReason", Native_TankControl_GetTankStartReason);
 
     g_hForwardOnTryOfferingTankBot = new GlobalForward("TankControl_OnTryOfferingTankBot", ET_Ignore, Param_String);
     g_hForwardOnTankSelection = new GlobalForward("TankControl_OnTankSelection", ET_Ignore, Param_String);
-    g_hForwardOnTankLifecycleStarted = new GlobalForward("TankControl_OnTankLifecycleStarted", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+    g_hForwardOnTankStarted = new GlobalForward("TankControl_OnTankStarted", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+    g_hForwardOnTankStartedEx = new GlobalForward("TankControl_OnTankStartedEx", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
     g_hForwardOnTankControlChanged = new GlobalForward("TankControl_OnTankControlChanged", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-    g_hForwardOnTankLifecycleEnded = new GlobalForward("TankControl_OnTankLifecycleEnded", ET_Ignore, Param_Cell, Param_Cell);
+    g_hForwardOnTankEnded = new GlobalForward("TankControl_OnTankEnded", ET_Ignore, Param_Cell, Param_Cell);
     RegPluginLibrary(LIBRARY_L4D_TANK_CONTROL_EQ);
 
     return APLRes_Success;
 }
 
-int Native_GetTankSelection(Handle plugin, int numParams) { return FindInfectedPlayerBySteamId(g_TankSelection.queuedSteamId); }
-int Native_TankControl_GetActiveTankLifecycleId(Handle plugin, int numParams) { return g_TankLifecycle.id; }
-int Native_TankControl_GetCurrentTankClient(Handle plugin, int numParams) { return g_TankLifecycle.id > 0 ? g_TankLifecycle.currentClient : -1; }
-int Native_TankControl_GetPendingTankClient(Handle plugin, int numParams) { return g_TankLifecycle.pendingClient; }
+int Native_GetTankSelection(Handle plugin, int numParams)
+{ 
+    return FindInfectedPlayerBySteamId(g_TankSelection.queuedSteamId);
+}
 
-int Native_TankControl_GetClientTankLifecycleId(Handle plugin, int numParams)
+int Native_TankControl_GetActiveTankId(Handle plugin, int numParams)
+{ 
+    return g_TankControl.id; 
+}
+
+int Native_TankControl_GetCurrentTankClient(Handle plugin, int numParams)
+{ 
+    return g_TankControl.id > 0 ? g_TankControl.currentClient : -1; 
+}
+
+int Native_TankControl_GetPendingTankClient(Handle plugin, int numParams) 
+{ 
+    return g_TankControl.pendingClient; 
+}
+
+int Native_TankControl_IsSubstituteTank(Handle plugin, int numParams) 
+{ 
+    return view_as<int>(NativeTankIdMatches(GetNativeCell(1)) && g_TankControl.isSubstitute); 
+}
+
+int Native_TankControl_GetParentTankId(Handle plugin, int numParams) 
+{ 
+    return NativeTankIdMatches(GetNativeCell(1)) ? g_TankControl.parentTankId : 0; 
+}
+
+int Native_TankControl_GetTankStartReason(Handle plugin, int numParams) 
+{ 
+    return NativeTankIdMatches(GetNativeCell(1)) ? view_as<int>(g_TankControl.startReason) : view_as<int>(TankControlStart_Unknown); 
+}
+
+int Native_TankControl_GetClientTankId(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
-    if (g_TankLifecycle.id <= 0 || client < 1 || client > MaxClients)
+    if (g_TankControl.id <= 0 || client < 1 || client > MaxClients)
         return 0;
 
-    if (client == g_TankLifecycle.currentClient || client == g_TankLifecycle.pendingClient)
-        return g_TankLifecycle.id;
+    if (client == g_TankControl.currentClient || client == g_TankControl.pendingClient)
+        return g_TankControl.id;
 
     return 0;
+}
+
+bool NativeTankIdMatches(int tankId)
+{
+    return g_TankControl.id > 0 && tankId == g_TankControl.id;
 }
 
 public Plugin myinfo = 
@@ -138,7 +185,7 @@ public void OnPluginStart()
 
 public void OnPluginEnd()
 {
-    ResetTankLifecycleState();
+    ResetTankControlState();
     g_TankSelection.Reset();
 
     if (g_hWhosHadTank != null)
@@ -154,29 +201,37 @@ public void OnPluginEnd()
     }
 }
 
-void ResetTankLifecycleState()
+void ResetTankControlState()
 {
-    g_TankLifecycle.Reset();
+    g_TankControl.Reset();
 }
 
 void UpdatePendingTankClient()
 {
-    g_TankLifecycle.pendingClient = FindInfectedPlayerBySteamId(g_TankSelection.queuedSteamId);
+    g_TankControl.pendingClient = FindInfectedPlayerBySteamId(g_TankSelection.queuedSteamId);
 }
 
-void FireTankLifecycleStarted(int lifecycleId, int client)
+void FireTankStarted(int tankId, int client)
 {
-    Call_StartForward(g_hForwardOnTankLifecycleStarted);
-    Call_PushCell(lifecycleId);
+    Call_StartForward(g_hForwardOnTankStarted);
+    Call_PushCell(tankId);
     Call_PushCell(client);
     Call_PushCell(client > 0 ? view_as<int>(IsFakeClient(client)) : 1);
     Call_Finish();
+
+    Call_StartForward(g_hForwardOnTankStartedEx);
+    Call_PushCell(tankId);
+    Call_PushCell(client);
+    Call_PushCell(client > 0 ? view_as<int>(IsFakeClient(client)) : 1);
+    Call_PushCell(g_TankControl.startReason);
+    Call_PushCell(g_TankControl.parentTankId);
+    Call_Finish();
 }
 
-void FireTankControlChanged(int lifecycleId, int oldClient, int newClient)
+void FireTankControlChanged(int tankId, int oldClient, int newClient)
 {
     Call_StartForward(g_hForwardOnTankControlChanged);
-    Call_PushCell(lifecycleId);
+    Call_PushCell(tankId);
     Call_PushCell(oldClient);
     Call_PushCell(newClient);
     Call_PushCell(oldClient > 0 ? view_as<int>(IsFakeClient(oldClient)) : 1);
@@ -184,58 +239,63 @@ void FireTankControlChanged(int lifecycleId, int oldClient, int newClient)
     Call_Finish();
 }
 
-void FireTankLifecycleEnded(int lifecycleId, TankControlLifecycleEndReason reason)
+void FireTankEnded(int tankId, TankControlEndReason reason)
 {
-    Call_StartForward(g_hForwardOnTankLifecycleEnded);
-    Call_PushCell(lifecycleId);
+    Call_StartForward(g_hForwardOnTankEnded);
+    Call_PushCell(tankId);
     Call_PushCell(reason);
     Call_Finish();
 }
 
-void StartTankLifecycle(int client)
+void StartTankControl(int client)
 {
-    if (g_TankLifecycle.id > 0)
+    if (g_TankControl.id > 0)
         return;
 
-    g_TankLifecycle.id = ++g_iTankLifecycleSerial;
-    g_TankLifecycle.currentClient = client;
-    FireTankLifecycleStarted(g_TankLifecycle.id, client);
+    g_TankControl.id = ++g_iTankIdSerial;
+    g_TankControl.parentTankId = g_iPendingSubstituteParentTankId;
+    g_TankControl.isSubstitute = g_iPendingSubstituteParentTankId > 0;
+    g_TankControl.startReason = g_TankControl.isSubstitute ? TankControlStart_Substitute : TankControlStart_Primary;
+    g_TankControl.currentClient = client;
+    FireTankStarted(g_TankControl.id, client);
+    g_iPendingSubstituteParentTankId = 0;
 
     if (g_cvTankDebug.BoolValue)
-        PrintToConsoleAll("[TC API] Lifecycle started: id=%d client=%N bot=%d", g_TankLifecycle.id, client, client > 0 ? IsFakeClient(client) : true);
+        PrintToConsoleAll("[TC API] Tank started: id=%d client=%N bot=%d start=%d parent=%d", g_TankControl.id, client, client > 0 ? IsFakeClient(client) : true, g_TankControl.startReason, g_TankControl.parentTankId);
 }
 
-void EndTankLifecycle(TankControlLifecycleEndReason reason)
+void EndTankControl(TankControlEndReason reason)
 {
-    if (g_TankLifecycle.id <= 0)
+    if (g_TankControl.id <= 0)
         return;
 
-    int lifecycleId = g_TankLifecycle.id;
+    int tankId = g_TankControl.id;
     if (g_cvTankDebug.BoolValue)
-        PrintToConsoleAll("[TC API] Lifecycle ended: id=%d reason=%d current=%d pending=%d", lifecycleId, reason, g_TankLifecycle.currentClient, g_TankLifecycle.pendingClient);
+        PrintToConsoleAll("[TC API] Tank ended: id=%d reason=%d current=%d pending=%d", tankId, reason, g_TankControl.currentClient, g_TankControl.pendingClient);
 
-    FireTankLifecycleEnded(lifecycleId, reason);
-    ResetTankLifecycleState();
+    FireTankEnded(tankId, reason);
+    g_iPendingSubstituteParentTankId = reason == TankControlEnd_TankDied ? tankId : 0;
+    ResetTankControlState();
 }
 
 void SetCurrentTankController(int client)
 {
-    if (g_TankLifecycle.id <= 0)
-        StartTankLifecycle(client);
+    if (g_TankControl.id <= 0)
+        StartTankControl(client);
 
-    if (g_TankLifecycle.currentClient == client)
+    if (g_TankControl.currentClient == client)
     {
         UpdatePendingTankClient();
         return;
     }
 
-    int oldClient = g_TankLifecycle.currentClient;
-    g_TankLifecycle.currentClient = client;
-    FireTankControlChanged(g_TankLifecycle.id, oldClient, client);
+    int oldClient = g_TankControl.currentClient;
+    g_TankControl.currentClient = client;
+    FireTankControlChanged(g_TankControl.id, oldClient, client);
     UpdatePendingTankClient();
 
     if (g_cvTankDebug.BoolValue)
-        PrintToConsoleAll("[TC API] Control changed: id=%d old=%d new=%d", g_TankLifecycle.id, oldClient, client);
+        PrintToConsoleAll("[TC API] Control changed: id=%d old=%d new=%d", g_TankControl.id, oldClient, client);
 }
 
 
@@ -251,14 +311,14 @@ public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
     * Then apply the previous' Tank's Frustration and Grace Period (if it still had Grace)
     * We'll also be keeping the same Tank pass, which resolves Tanks that dc on 1st pass resulting into the Tank instantly going to 2nd pass.
     */
-    if (g_TankLifecycle.disconnectFrustration != -1 && IsFakeClient(iOldTank))
+    if (g_TankControl.disconnectFrustration != -1 && IsFakeClient(iOldTank))
     {
-        SetTankFrustration(iNewTank, g_TankLifecycle.disconnectFrustration);
-        CTimer_Start(GetFrustrationTimer(iNewTank), g_TankLifecycle.graceTime);
+        SetTankFrustration(iNewTank, g_TankControl.disconnectFrustration);
+        CTimer_Start(GetFrustrationTimer(iNewTank), g_TankControl.graceTime);
         L4D2Direct_SetTankPassedCount(L4D2Direct_GetTankPassedCount() - 1);
     }
 
-    g_TankLifecycle.gotTankAt = GetGameTime();
+    g_TankControl.gotTankAt = GetGameTime();
     SetCurrentTankController(iNewTank);
     if (g_cvTankDebug.BoolValue)
         PrintToConsoleAll("[TC] gotTankAt set to %f (iOldTank: %N - iNewTank: %N)", GetGameTime(), iOldTank, iNewTank);
@@ -269,7 +329,7 @@ public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
  */
 public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
 {
-    StartTankLifecycle(tank_index);
+    StartTankControl(tank_index);
 
     // Reset the tank's frustration if need be
     if (!IsFakeClient(tank_index)) 
@@ -374,10 +434,11 @@ void L4D_OnLeaveStasis_Post(int userid)
 void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     CreateTimer(10.0, OnNewGameTimer);
-    g_TankLifecycle.disconnectFrustration = -1;
-    g_TankLifecycle.gotTankAt = 0.0;
+    g_iPendingSubstituteParentTankId = 0;
+    g_TankControl.disconnectFrustration = -1;
+    g_TankControl.gotTankAt = 0.0;
     g_TankSelection.initialSteamId[0] = '\0';
-    ResetTankLifecycleState();
+    ResetTankControlState();
 }
 
 Action OnNewGameTimer(Handle timer)
@@ -401,7 +462,8 @@ Action OnNewGameTimer(Handle timer)
  */
 void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    EndTankLifecycle(TankControlLifecycleEnd_RoundEnded);
+    EndTankControl(TankControlEnd_RoundEnded);
+    g_iPendingSubstituteParentTankId = 0;
     g_TankSelection.queuedSteamId[0] = '\0';
     UpdatePendingTankClient();
     g_TankSelection.initialSteamId[0] = '\0';
@@ -441,13 +503,13 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
         {
             if (bIsTankPlayer(client))
             {
-                g_TankLifecycle.disconnectFrustration = GetTankFrustration(client);
-                g_TankLifecycle.graceTime = CTimer_GetRemainingTime(GetFrustrationTimer(client));
+                g_TankControl.disconnectFrustration = GetTankFrustration(client);
+                g_TankControl.graceTime = CTimer_GetRemainingTime(GetFrustrationTimer(client));
 
                 // Slight fix due to the timer seemingly always getting stuck between 0.5s~1.2s even after Grace period has passed.
                 // CTimer_IsElapsed still returns false as well.
-                if (g_TankLifecycle.graceTime < 0.0 || g_TankLifecycle.disconnectFrustration < 100) 
-                    g_TankLifecycle.graceTime = 0.0;
+                if (g_TankControl.graceTime < 0.0 || g_TankControl.disconnectFrustration < 100) 
+                    g_TankControl.graceTime = 0.0;
             }
         }
 
@@ -473,10 +535,10 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
             int tank = FindTankPlayer();
 
             if (g_cvTankDebug.BoolValue)
-                PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), g_TankSelection.initialTankLeft, g_TankLifecycle.gotTankAt);
+                PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), g_TankSelection.initialTankLeft, g_TankControl.gotTankAt);
 
             float window = g_cvTankWindow.FloatValue;
-            if (window > 0.0 && L4D2_GetTankCount() == 1 && tank != -1 && (g_TankLifecycle.gotTankAt - g_TankSelection.initialTankLeft) < window)
+            if (window > 0.0 && L4D2_GetTankCount() == 1 && tank != -1 && (g_TankControl.gotTankAt - g_TankSelection.initialTankLeft) < window)
             {
                 // Delay by a frame as player needs to "settle in"
                 RequestFrame(ReplaceTank, client);
@@ -544,18 +606,18 @@ void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     int victim = GetClientOfUserId(hEvent.GetInt("userid"));
     
-    if (victim && bIsValidInfected(victim) && g_TankLifecycle.gotTankAt > 0.0)
+    if (victim && bIsValidInfected(victim) && g_TankControl.gotTankAt > 0.0)
     {
         if (bIsTankPlayer(victim))
         {
             if (g_cvTankDebug.BoolValue)
                 PrintToConsoleAll("[TC] Tank died (player_death), choosing a new tank");
 
-            EndTankLifecycle(TankControlLifecycleEnd_TankDied);
+            EndTankControl(TankControlEnd_TankDied);
             g_TankSelection.initialSteamId[0] = '\0';
             SelectTank(0);
-            g_TankLifecycle.gotTankAt = 0.0;
-            g_TankLifecycle.disconnectFrustration = -1;
+            g_TankControl.gotTankAt = 0.0;
+            g_TankControl.disconnectFrustration = -1;
         }
     }
 }

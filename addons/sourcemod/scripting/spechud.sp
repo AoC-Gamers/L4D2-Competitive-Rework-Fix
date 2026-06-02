@@ -7,16 +7,17 @@
 #include <left4dhooks>
 #include <colors>
 #include <l4d2util_weapons>
+
+#undef REQUIRE_PLUGIN
 #include <readyup>
 #include <pause>
 #include <l4d2_boss_percents>
-#include <l4d2_hybrid_scoremod_zone>
+#include <l4d2_hybrid_scoremod>
 #include <l4d2_scoremod>
-#include <l4d2_health_temp_bonus>
 #include <l4d_tank_control_eq>
 #include <lerpmonitor>
 #include <witch_and_tankifier>
-#include <client_name_helpers>
+#define REQUIRE_PLUGIN
 
 #include "spechud/types.sp"
 #include "spechud/helpers.sp"
@@ -86,24 +87,49 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	g_Runtime.Refresh();
 	if (StrEqual(name, LIBRARY_READYUP))
 	{
+		g_Runtime.readyUp = true;
 		RefreshServerNameCache();
 		RefreshReadyCfgName();
 	}
-	if (StrEqual(name, LIBRARY_L4D_BOSS_PERCENT))
+	else if (StrEqual(name, LIBRARY_PAUSE))
 	{
+		g_Runtime.pause = true;
+	}
+	else if (StrEqual(name, LIBRARY_L4D_BOSS_PERCENT))
+	{
+		g_Runtime.l4dBossPercent = true;
 		RefreshBossPercentHandles();
 		RefreshBossPercentCache();
+	}
+	else if (StrEqual(name, LIBRARY_L4D2_HYBRID_SCOREMOD))
+	{
+		g_Runtime.hybridScoremod = true;
+	}
+	else if (StrEqual(name, LIBRARY_L4D2_SCOREMOD))
+	{
+		g_Runtime.scoremod = true;
+	}
+	else if (StrEqual(name, LIBRARY_L4D_TANK_CONTROL_EQ))
+	{
+		g_Runtime.tankControlEq = true;
+	}
+	else if (StrEqual(name, LIBRARY_LERP_MONITOR))
+	{
+		g_Runtime.lerpMonitor = true;
+	}
+	else if (StrEqual(name, LIBRARY_WITCH_AND_TANKIFIER))
+	{
+		g_Runtime.witchAndTankifier = true;
 	}
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
-	g_Runtime.Refresh();
 	if (StrEqual(name, LIBRARY_READYUP))
 	{
+		g_Runtime.readyUp = false;
 		if (g_cvReadyServerCvar != null)
 		{
 			g_cvReadyServerCvar.RemoveChangeHook(ReadyServerCvarChanged);
@@ -122,11 +148,36 @@ public void OnLibraryRemoved(const char[] name)
 		g_sHostname[0] = '\0';
 		g_sReadyCfgName[0] = '\0';
 	}
-	if (StrEqual(name, LIBRARY_L4D_BOSS_PERCENT))
+	else if (StrEqual(name, LIBRARY_PAUSE))
 	{
+		g_Runtime.pause = false;
+	}
+	else if (StrEqual(name, LIBRARY_L4D_BOSS_PERCENT))
+	{
+		g_Runtime.l4dBossPercent = false;
 		g_cvTankPercent = null;
 		g_cvWitchPercent = null;
 		g_BossFlow.Reset();
+	}
+	else if (StrEqual(name, LIBRARY_L4D2_HYBRID_SCOREMOD))
+	{
+		g_Runtime.hybridScoremod = false;
+	}
+	else if (StrEqual(name, LIBRARY_L4D2_SCOREMOD))
+	{
+		g_Runtime.scoremod = false;
+	}
+	else if (StrEqual(name, LIBRARY_L4D_TANK_CONTROL_EQ))
+	{
+		g_Runtime.tankControlEq = false;
+	}
+	else if (StrEqual(name, LIBRARY_LERP_MONITOR))
+	{
+		g_Runtime.lerpMonitor = false;
+	}
+	else if (StrEqual(name, LIBRARY_WITCH_AND_TANKIFIER))
+	{
+		g_Runtime.witchAndTankifier = false;
 	}
 }
 

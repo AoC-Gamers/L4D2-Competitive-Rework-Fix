@@ -129,6 +129,40 @@ char g_sDisruptReason[disruptType_SIZE][] =
 	"Admin aborted"
 };
 
+bool ValvePanel_ShiftInvalidString(char[] str, int maxlen)
+{
+	switch (str[0])
+	{
+		case '[':
+		{
+			char[] temp = new char[maxlen];
+			strcopy(temp, maxlen, str) + 1;
+
+			int size = strcopy(str[1], maxlen - 1, temp) + 1;
+
+			str[0] = ' ';
+			str[size < maxlen ? size : maxlen - 1] = '\0';
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void GetClientFixedName(int client, char[] name, int length, bool truncate = false)
+{
+	GetClientName(client, name, length);
+
+	ValvePanel_ShiftInvalidString(name, length);
+
+	if (truncate && strlen(name) > 18)
+	{
+		name[15] = name[16] = name[17] = '.';
+		name[18] = 0;
+	}
+}
+
 // Sub modules are included here
 #include "readyup/action.inc"
 #include "readyup/command.inc"

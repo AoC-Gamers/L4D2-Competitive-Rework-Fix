@@ -540,7 +540,7 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 		
 		case GAMEMODE_VERSUS:
 		{
-			if (g_Runtime.hybridScoremod || g_Runtime.hybridScoremodZone)
+			if (g_Runtime.hybridScoremod)
 			{
 				int healthBonus = SMPlus_GetBonus(SMPlusBonusType_Health);
 				int maxHealthBonus = SMPlus_GetMaxBonus(SMPlusBonusType_Health);
@@ -585,34 +585,6 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 				DrawPanelText(hSpecHud, line);
 			}
 			
-			else if (g_Runtime.healthTempBonus)
-			{
-				int permBonus = SMNext_GetPermBonus();
-				int maxPermBonus = SMNext_GetMaxPermBonus();
-				int tempBonus = SMNext_GetTempBonus();
-				int maxTempBonus = SMNext_GetMaxTempBonus();
-				int pillsBonus = SMNext_GetPillsBonus();
-				int maxPillsBonus = SMNext_GetMaxPillsBonus();
-				
-				int totalBonus = permBonus + tempBonus + pillsBonus;
-				int maxTotalBonus = maxPermBonus + maxTempBonus + maxPillsBonus;
-				
-				DrawPanelText(hSpecHud, " ");
-				
-				FormatEx(	line,
-							sizeof(line),
-							"%T",
-							target,
-							"Spechud_NextStats",
-							permBonus, tempBonus, pillsBonus);
-				DrawPanelText(hSpecHud, line);
-				
-				FormatEx(line, sizeof(line), "%T", target, "Spechud_BonusValue", totalBonus, PercentFloat(totalBonus, maxTotalBonus));
-				DrawPanelText(hSpecHud, line);
-				
-				FormatEx(line, sizeof(line), "%T", target, "Spechud_DistanceValue", g_iMaxDistance);
-				DrawPanelText(hSpecHud, line);
-			}
 		}
 	}
 
@@ -882,7 +854,7 @@ bool FillGameInfoScavenge(Panel hSpecHud, int target)
 bool FillGameInfoVersus(Panel hSpecHud, int target)
 {
 	static char line[64];
-	bool hasScoreBlock = (g_Runtime.scoremod || g_Runtime.hybridScoremod || g_Runtime.hybridScoremodZone || g_Runtime.healthTempBonus);
+	bool hasScoreBlock = (g_Runtime.scoremod || g_Runtime.hybridScoremod);
 	bool hasBossBlock = (g_Runtime.l4dBossPercent && g_BossRound.tankCount > 0);
 	bool hasTankSelection = (g_Runtime.tankSelection && g_BossRound.tankCount > 0);
 

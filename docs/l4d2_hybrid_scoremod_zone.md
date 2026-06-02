@@ -1,63 +1,41 @@
 # l4d2_hybrid_scoremod_zone
 
-## Plugin
+## Estado
 
-- `addons/sourcemod/scripting/l4d2_hybrid_scoremod_zone.sp`
 - `addons/sourcemod/scripting/include/l4d2_hybrid_scoremod_zone.inc`
 - `addons/sourcemod/translations/l4d2_hybrid_scoremod.phrases.txt`
 - `addons/sourcemod/translations/es/l4d2_hybrid_scoremod.phrases.txt`
 
-## Motivo del Override
+La implementación fuente `addons/sourcemod/scripting/l4d2_hybrid_scoremod_zone.sp` fue eliminada.
 
-Este plugin fue movido a `L4D2-Competitive-Rework-Fix` porque recibió un rework técnico equivalente al `hybrid` principal, con cambios de sintaxis, API pública, traducciones y cleanup, y debe mantenerse como override del proyecto competitivo.
+La lógica de esta variante fue absorbida por:
 
-## Cambios Aplicados
+- `addons/sourcemod/scripting/l4d2_hybrid_scoremod.sp`
 
-### Sintaxis y tipado
+## Motivo del Cambio
 
-- migración a sintaxis moderna de SourcePawn
-- uso de `#pragma newdecls required`
-- reemplazo de sintaxis legacy por tipos explícitos
-- reutilización de `L4DTeam`, `L4DWeaponSlot` y helpers de `left4dhooks_stocks.inc`
+La variante `zone` y la variante `hybrid` compartían casi toda su implementación. La diferencia funcional relevante era la penalización adicional aplicada en eventos de incap y death. Para evitar mantener dos fuentes paralelas, esa diferencia pasó a controlarse por ConVar.
 
-### API pública
+## Comportamiento Actual
 
-- creación del include `l4d2_hybrid_scoremod_zone.inc`
-- incorporación de `SMPlusBonusType`
-- incorporación de:
-  - `SMPlus_GetBonus(SMPlusBonusType type, int client = 0)`
-  - `SMPlus_GetMaxBonus(SMPlusBonusType type)`
-  - `SMPlus_FillBonusSnapshotKv(KeyValues kv)`
-  - `forward void SMPlus_OnMatchFinalized(int winningTeam)`
-
-### Snapshot y datos expuestos
-
-- snapshot por `KeyValues`
-- estructura `clients/<userid>`
-- bonus por health, damage, pills y total
-- estado de rondas y tiebreaker en el snapshot
-
-### Traducciones y chat
-
-- reutiliza el mismo archivo de frases del hybrid principal
-- uso de `colors.inc`
-- adopción de `CPrintToChat` y `CPrintToChatAll`
-
-### Limpieza y flujo
-
-- cleanup explícito en `OnPluginEnd()`
-- unhook de eventos, ConVars y SDKHooks
-- liberación del `GlobalForward`
-- corrección del reset de elegibilidad de tiebreaker al inicio de ronda
+- `smplus_zone_mode 1` reproduce el comportamiento que antes entregaba `l4d2_hybrid_scoremod_zone`
+- `smplus_zone_mode 0` usa el comportamiento tradicional de `l4d2_hybrid_scoremod`
+- el valor por defecto está pensado para cubrir los modos que antes cargaban `zone`
 
 ## Compatibilidad
 
-- mantiene el modelo competitivo de la variante `zone`
-- expone una API alineada con `l4d2_hybrid_scoremod`, pero en include y librería separados
+- el include `l4d2_hybrid_scoremod_zone.inc` se conserva como referencia de compatibilidad documental
+- la API pública expuesta por la antigua variante `zone` quedó absorbida por `l4d2_hybrid_scoremod`
+- `spechud` fue migrado para consumir sólo `l4d2_hybrid_scoremod`
+- los modos que antes cargaban `l4d2_hybrid_scoremod_zone.smx` deben cargar ahora `l4d2_hybrid_scoremod.smx`
 
-## Archivos Asociados
+## Migración de Configs
 
-- include propio
-- traducciones compartidas con `l4d2_hybrid_scoremod`
+- modos tradicionales como `eq` y `acemodrv` deben declarar `confogl_addcvar smplus_zone_mode 0`
+- modos que antes cargaban `zone` no necesitan `smplus_zone_mode 1` explícito si usan el valor por defecto
+- en flujos donde el repo original se modifica antes de instalarse, el hook `sir.default.sh` de `Docker-L4D2-AoC` es el punto correcto para aplicar esta migración sin editar el upstream
 
-Este plugin debe desplegarse junto con su include y el archivo de frases compartido.
+## Referencia Histórica
+
+- este documento queda como registro de la antigua variante separada
+- cualquier cambio nuevo debe documentarse en `docs/l4d2_hybrid_scoremod.md`

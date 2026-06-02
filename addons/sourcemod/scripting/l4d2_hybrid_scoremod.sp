@@ -30,6 +30,7 @@ ConVar g_cvBonusPerSurvivorMultiplier;
 ConVar g_cvPermanentHealthProportion;
 ConVar g_cvPillsHpFactor;
 ConVar g_cvPillsMaxBonus;
+ConVar g_cvZoneMode;
 ConVar g_cvDebug;
 ConVar g_cvValveSurvivalBonus;
 ConVar g_cvValveTieBreaker;
@@ -59,9 +60,9 @@ bool g_bTiebreakerEligibility[2];
 public Plugin myinfo =
 {
     name = "L4D2 Scoremod+",
-    author = "Visor",
+    author = "Visor, Sir",
     description = "The next generation scoring mod",
-    version = "2.2.5",
+    version = "2.3.0",
     url = "https://github.com/AoC-Gamers/L4D2-Competitive-Rework-Fix"
 };
 
@@ -85,6 +86,7 @@ public void OnPluginStart()
     g_cvPermanentHealthProportion = CreateConVar("sm2_permament_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus");
     g_cvPillsHpFactor = CreateConVar("sm2_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this");
     g_cvPillsMaxBonus = CreateConVar("sm2_pills_max_bonus", "30", "Unused pills cannot be worth more than this");
+    g_cvZoneMode = CreateConVar("smplus_zone_mode", "1", "Enable Zone-style incap and death penalties");
     g_cvDebug = CreateConVar("smplus_debug", "0", "Enable scoremod debug output");
 
     g_cvValveSurvivalBonus = FindConVar("vs_survival_bonus");
@@ -95,8 +97,10 @@ public void OnPluginStart()
 
     HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
     HookEvent("player_ledge_grab", OnPlayerLedgeGrab);
+    HookEvent("player_incapacitated", OnPlayerIncapped);
     HookEvent("player_hurt", OnPlayerHurt);
     HookEvent("revive_success", OnPlayerRevived, EventHookMode_Post);
+    HookEvent("player_death", OnPlayerDeath);
 
     RegConsoleCmd("sm_health", CmdBonus);
     RegConsoleCmd("sm_damage", CmdBonus);
@@ -123,8 +127,10 @@ public void OnPluginEnd()
     UnhookConVarChange(g_cvPermanentHealthProportion, CvarChanged);
     UnhookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
     UnhookEvent("player_ledge_grab", OnPlayerLedgeGrab);
+    UnhookEvent("player_incapacitated", OnPlayerIncapped);
     UnhookEvent("player_hurt", OnPlayerHurt);
     UnhookEvent("revive_success", OnPlayerRevived, EventHookMode_Post);
+    UnhookEvent("player_death", OnPlayerDeath);
 
     for (int client = 1; client <= MaxClients; client++)
     {
@@ -317,6 +323,41 @@ void OnPlayerLedgeGrab(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     g_iLostTempHealth[GameRules_GetProp("m_bInSecondHalfOfRound")] += L4D2Direct_GetPreIncapHealthBuffer(client);
+}
+
+void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+    int victim = GetClientOfUserId(event.GetInt("userid"));
+
+    if (!IsZoneModeEnabled() || !IsSurvivor(victim) || g_bRoundOver)
+    {
+        return;
+    }
+
+    int incaps = L4D_GetPlayerReviveCount(victim);
+    int standardPenalty = RoundToFloor((g_fMapDamageBonus / 100.0) * 5.0 / g_fTempHpWorth);
+    int penalty = 0;
+
+    for (int loops = 2 - incaps; loops > 0; loops--)
+    {
+        penalty += standardPenalty + 30;
+    }
+
+    g_iLostTempHealth[GameRules_GetProp("m_bInSecondHalfOfRound")] += penalty;
+    DebugPrint("Zone death penalty for %N: incaps=%d penalty=%d", victim, incaps, penalty);
+}
+
+void OnPlayerIncapped(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+
+    if (!IsZoneModeEnabled() || !IsSurvivor(client))
+    {
+        return;
+    }
+
+    g_iLostTempHealth[GameRules_GetProp("m_bInSecondHalfOfRound")] += RoundToFloor((g_fMapDamageBonus / 100.0) * 5.0 / g_fTempHpWorth);
+    DebugPrint("Zone incap penalty applied to %N", client);
 }
 
 void OnPlayerRevived(Event event, const char[] name, bool dontBroadcast)
@@ -727,6 +768,11 @@ void DebugPrint(const char[] format, any ...)
     char buffer[256];
     VFormat(buffer, sizeof(buffer), format, 2);
     CPrintToChatAll("{olive}[Hybrid Bonus Debug]{default} %s", buffer);
+}
+
+bool IsZoneModeEnabled()
+{
+    return g_cvZoneMode.BoolValue;
 }
 
 bool IsSurvivor(int client)

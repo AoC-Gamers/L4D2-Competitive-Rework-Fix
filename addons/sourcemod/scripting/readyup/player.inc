@@ -3,8 +3,6 @@
 #endif
 #define _readyup_player_included
 
-#include <client_name_helpers>
-
 static bool
 	isPlayerReady[MAXPLAYERS+1],
 	hiddenPanel[MAXPLAYERS+1];

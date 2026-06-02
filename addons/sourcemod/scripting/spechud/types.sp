@@ -6,11 +6,8 @@
 #define LIBRARY_READYUP "readyup"
 #define LIBRARY_PAUSE "pause"
 #define LIBRARY_L4D_BOSS_PERCENT "l4d_boss_percent"
-#define LIBRARY_L4D2_HYBRID_SCOREMOD_ZONE "l4d2_hybrid_scoremod_zone"
 #define LIBRARY_L4D2_HYBRID_SCOREMOD "l4d2_hybrid_scoremod"
 #define LIBRARY_L4D2_SCOREMOD "l4d2_scoremod"
-#define LIBRARY_L4D2_HEALTH_TEMP_BONUS "l4d2_health_temp_bonus"
-#define LIBRARY_L4D_TANK_CONTROL_EQ "l4d_tank_control_eq"
 #define LIBRARY_LERP_MONITOR "lerpmonitor"
 #define LIBRARY_WITCH_AND_TANKIFIER "witch_and_tankifier"
 
@@ -173,10 +170,8 @@ enum struct RuntimeState
 	bool readyUp;
 	bool pause;
 	bool l4dBossPercent;
-	bool hybridScoremodZone;
 	bool hybridScoremod;
 	bool scoremod;
-	bool healthTempBonus;
 	bool tankControlEq;
 	bool lerpMonitor;
 	bool witchAndTankifier;
@@ -191,10 +186,8 @@ enum struct RuntimeState
 		this.readyUp = false;
 		this.pause = false;
 		this.l4dBossPercent = false;
-		this.hybridScoremodZone = false;
 		this.hybridScoremod = false;
 		this.scoremod = false;
-		this.healthTempBonus = false;
 		this.tankControlEq = false;
 		this.lerpMonitor = false;
 		this.witchAndTankifier = false;
@@ -209,10 +202,8 @@ enum struct RuntimeState
 		this.readyUp = LibraryExists(LIBRARY_READYUP);
 		this.pause = LibraryExists(LIBRARY_PAUSE);
 		this.l4dBossPercent = LibraryExists(LIBRARY_L4D_BOSS_PERCENT);
-		this.hybridScoremodZone = LibraryExists(LIBRARY_L4D2_HYBRID_SCOREMOD_ZONE);
 		this.hybridScoremod = LibraryExists(LIBRARY_L4D2_HYBRID_SCOREMOD);
 		this.scoremod = LibraryExists(LIBRARY_L4D2_SCOREMOD);
-		this.healthTempBonus = LibraryExists(LIBRARY_L4D2_HEALTH_TEMP_BONUS);
 		this.tankControlEq = LibraryExists(LIBRARY_L4D_TANK_CONTROL_EQ);
 		this.lerpMonitor = LibraryExists(LIBRARY_LERP_MONITOR);
 		this.witchAndTankifier = LibraryExists(LIBRARY_WITCH_AND_TANKIFIER);

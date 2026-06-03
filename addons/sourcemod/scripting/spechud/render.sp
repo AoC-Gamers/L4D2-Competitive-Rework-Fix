@@ -89,7 +89,7 @@ Action HudDrawTimer(Handle hTimer)
 			if (!g_bSpecHudHintShown[client])
 			{
 				g_bSpecHudHintShown[client] = true;
-				CPrintToChat(client, "%t", "Notify_SpechudUsage", "Tag");
+				CPrintToChat(client, "%t", "Notify_SpechudUsage");
 			}
 			delete specHud;
 		}
@@ -118,7 +118,7 @@ Action HudDrawTimer(Handle hTimer)
 			if (!g_bTankHudHintShown[client])
 			{
 				g_bTankHudHintShown[client] = true;
-				CPrintToChat(client, "%t", "Notify_TankhudUsage", "Tag");
+				CPrintToChat(client, "%t", "Notify_TankhudUsage");
 			}
 			delete tankHud;
 		}
@@ -248,6 +248,7 @@ void BuildInfectedSnapshot(int client, InfectedSnapshot snap)
 void BuildSurvivorLine(SurvivorSnapshot survivor, int target, char[] line, int length)
 {
 	static char name[MAX_NAME_LENGTH];
+	static char weaponInfo[64];
 	GetClientFixedName(survivor.client, name, sizeof(name), true);
 
 	if (!survivor.alive)
@@ -269,23 +270,23 @@ void BuildSurvivorLine(SurvivorSnapshot survivor, int target, char[] line, int l
 	{
 		static char ordinal[8];
 		FormatEx(ordinal, sizeof(ordinal), "%T", (survivor.incapCount == 1 ? "Spechud_Ordinal2" : "Spechud_Ordinal1"), target);
-		GetLongWeaponName(weapon.activeWepId, line, length);
-		FormatEx(line, length, "%T", "Spechud_SurvivorIncap", target, name, survivor.health, ordinal, line, weapon.activeClip);
+		GetLongWeaponName(weapon.activeWepId, weaponInfo, sizeof(weaponInfo));
+		FormatEx(line, length, "%T", "Spechud_SurvivorIncap", target, name, survivor.health, ordinal, weaponInfo, weapon.activeClip);
 		return;
 	}
 
-	GetWeaponInfo(weapon, line, length);
+	GetWeaponInfo(weapon, weaponInfo, sizeof(weaponInfo));
 	
 	int healthTotal = survivor.health + survivor.tempHealth;
 	if (survivor.incapCount == 0)
 	{
-		FormatEx(line, length, "%T", "Spechud_SurvivorBleeding", target, name, healthTotal, (survivor.tempHealth > 0 ? "#" : ""), line);
+		FormatEx(line, length, "%T", "Spechud_SurvivorBleeding", target, name, healthTotal, (survivor.tempHealth > 0 ? "#" : ""), weaponInfo);
 	}
 	else
 	{
 		static char ordinal[8];
 		FormatEx(ordinal, sizeof(ordinal), "%T", (survivor.incapCount == 2 ? "Spechud_Ordinal2" : "Spechud_Ordinal1"), target);
-		FormatEx(line, length, "%T", "Spechud_SurvivorBleedingIncap", target, name, healthTotal, ordinal, line);
+		FormatEx(line, length, "%T", "Spechud_SurvivorBleedingIncap", target, name, healthTotal, ordinal, weaponInfo);
 	}
 }
 
@@ -345,7 +346,7 @@ bool BuildInfectedLine(InfectedSnapshot infected, int target, char[] line, int l
 	buffer[0] = '\0';
 	if (infected.hasCooldown)
 	{
-		FormatEx(buffer, sizeof(buffer), " [%T]", target, "Spechud_CooldownSuffix", infected.cooldown);
+		FormatEx(buffer, sizeof(buffer), " [%T]", "Spechud_CooldownSuffix", target, infected.cooldown);
 	}
 	
 	if (infected.onFire)
@@ -369,6 +370,8 @@ bool BuildInfectedLine(InfectedSnapshot infected, int target, char[] line, int l
  */
 void GetMeleePrefix(WeaponSnapshot snap, char[] prefix, int length)
 {
+	prefix[0] = '\0';
+
 	if (snap.secondaryWep == -1)
 		return;
 	
@@ -394,7 +397,8 @@ void GetMeleePrefix(WeaponSnapshot snap, char[] prefix, int length)
  */
 void GetWeaponInfo(WeaponSnapshot snap, char[] info, int length)
 {
-	static char buffer[32];
+	static char primaryInfo[32];
+	static char secondaryInfo[16];
 	
 	// Let's begin with what player is holding,
 	// but cares only pistols if holding secondary.
@@ -406,16 +410,16 @@ void GetWeaponInfo(WeaponSnapshot snap, char[] info, int length)
 			{
 				// Dual Pistols Scenario
 				// Straight use the prefix since full name is a bit long.
-				Format(buffer, sizeof(buffer), "DP");
+				strcopy(primaryInfo, sizeof(primaryInfo), "DP");
 			}
-			else GetLongWeaponName(snap.activeWepId, buffer, sizeof(buffer));
+			else GetLongWeaponName(snap.activeWepId, primaryInfo, sizeof(primaryInfo));
 			
-			FormatEx(info, length, "%s %i", buffer, snap.activeClip);
+			FormatEx(info, length, "%s %i", primaryInfo, snap.activeClip);
 		}
 		default:
 		{
-			GetLongWeaponName(snap.primaryWepId, buffer, sizeof(buffer));
-			FormatEx(info, length, "%s %i/%i", buffer, snap.primaryClip, snap.primaryExtra);
+			GetLongWeaponName(snap.primaryWepId, primaryInfo, sizeof(primaryInfo));
+			FormatEx(info, length, "%s %i/%i", primaryInfo, snap.primaryClip, snap.primaryExtra);
 		}
 	}
 	
@@ -437,16 +441,19 @@ void GetWeaponInfo(WeaponSnapshot snap, char[] info, int length)
 		// i.e. [Chrome 8/56 | M]
 		if (GetSlotFromWeaponId(snap.activeWepId) != view_as<int>(L4DWeaponSlot_Secondary) || snap.activeWepId == WEPID_MELEE || snap.activeWepId == WEPID_CHAINSAW)
 		{
-			GetMeleePrefix(snap, buffer, sizeof(buffer));
-			Format(info, length, "%s | %s", info, buffer);
+			GetMeleePrefix(snap, secondaryInfo, sizeof(secondaryInfo));
+			if (secondaryInfo[0] != '\0')
+			{
+				FormatEx(info, length, "%s | %s", info, secondaryInfo);
+			}
 		}
 
 		// Secondary active -> [Secondary <In Detail> | Primary <Ammo Sum>]
 		// i.e. [Deagle 8 | Mac 700]
 		else
 		{
-			GetLongWeaponName(snap.primaryWepId, buffer, sizeof(buffer));
-			Format(info, length, "%s | %s %i", info, buffer, snap.primaryClip + snap.primaryExtra);
+			GetLongWeaponName(snap.primaryWepId, primaryInfo, sizeof(primaryInfo));
+			FormatEx(info, length, "%s | %s %i", info, primaryInfo, snap.primaryClip + snap.primaryExtra);
 		}
 	}
 }
@@ -525,7 +532,7 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 			
 			DrawPanelText(hSpecHud, " ");
 				
-			FormatEx(line, sizeof(line), "%T [%02d:%02.0f]", target, "Spechud_AccumulatedTime", minutes, duration - 60 * minutes);
+			FormatEx(line, sizeof(line), "%T [%02d:%02.0f]", "Spechud_AccumulatedTime", target, minutes, duration - 60 * minutes);
 			DrawPanelText(hSpecHud, line);
 			
 			if (isSecondHalf)
@@ -533,7 +540,7 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 				duration = GetScavengeRoundDuration(!teamFlipped);
 				minutes = RoundToFloor(duration / 60);
 				
-				FormatEx(line, sizeof(line), "%T [%02d:%05.2f]", target, "Spechud_OpponentDuration", minutes, duration - 60 * minutes);
+				FormatEx(line, sizeof(line), "%T [%02d:%05.2f]", "Spechud_OpponentDuration", target, minutes, duration - 60 * minutes);
 				DrawPanelText(hSpecHud, line);
 			}
 		}
@@ -577,17 +584,17 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 				FormatEx(	line,
 							sizeof(line),
 							"%T",
-							target,
 							"Spechud_HybridStats",
+							target,
 							PercentFloat(healthBonus, maxHealthBonus),
 							PercentFloat(damageBonus, maxDamageBonus),
 							pillsBonus, PercentFloat(pillsBonus, maxPillsBonus));
 				DrawPanelText(hSpecHud, line);
 				
-				FormatEx(line, sizeof(line), "%T", target, "Spechud_BonusValue", totalBonus, PercentFloat(totalBonus, maxTotalBonus));
+				FormatEx(line, sizeof(line), "%T", "Spechud_BonusValue", target, totalBonus, PercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, line);
 				
-				FormatEx(line, sizeof(line), "%T", target, "Spechud_DistanceValue", g_iMaxDistance);
+				FormatEx(line, sizeof(line), "%T", "Spechud_DistanceValue", target, g_iMaxDistance);
 				DrawPanelText(hSpecHud, line);
 				delete snapshot;
 			}
@@ -937,7 +944,7 @@ bool BuildBossFlowInfo(char[] line, int length, int target)
 
 		if (hasLine)
 		{
-			Format(line, length, "%s | %T", line, target, "Spechud_BossFlowWitch", buffer);
+			Format(line, length, "%s | %T", line, "Spechud_BossFlowWitch", target, buffer);
 		}
 		else
 		{
@@ -949,7 +956,7 @@ bool BuildBossFlowInfo(char[] line, int length, int target)
 	if (hasLine)
 	{
 		static char merged[128];
-		FormatEx(merged, sizeof(merged), "%s | %T", line, target, "Spechud_BossFlowCurrent", survivorFlow);
+		FormatEx(merged, sizeof(merged), "%s | %T", line, "Spechud_BossFlowCurrent", target, survivorFlow);
 		strcopy(line, length, merged);
 	}
 

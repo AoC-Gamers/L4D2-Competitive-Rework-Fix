@@ -2,37 +2,61 @@
 {
     "Tag"
     {
-        "en"        "[{olive}Hybrid Bonus{default}]"
+        "en"        "[{olive}Bonus{default}]"
     }
 
     "RoundBonusSummary"
     {
         "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:s}"
-        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default}/{green}{3}{default} <{olive}{4:.1f}%{default}> [{5}]"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {teamcolor}[ {5} ]{default}"
+    }
+
+    "RoundBonusSummaryCustom"
+    {
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:s},{6:s}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {teamcolor}[ {5} | Custom {olive}{6}{teamcolor} ]{default}"
     }
 
     "RoundBonusFull"
     {
         "#format"   "{1:d},{2:d},{3:.1f},{4:d},{5:.1f},{6:d},{7:.1f},{8:d},{9:.1f}"
-        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}> [HB: {green}{4}{default} <{olive}{5:.1f}%{default}> | DB: {green}{6}{default} <{olive}{7:.1f}%{default}> | Pills: {green}{8}{default} <{olive}{9:.1f}%{default}>]"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{default} ({olive}{3:.1f}%%{default}) {teamcolor}[ Health {green}{4}{default} ({olive}{5:.1f}%%{default}) {teamcolor}| Damage {green}{6}{default} ({olive}{7:.1f}%%{default}) {teamcolor}| Pills {green}{8}{default} ({olive}{9:.1f}%%{default}) ]{default}"
+    }
+
+    "RoundBonusFullCustom"
+    {
+        "#format"   "{1:d},{2:d},{3:.1f},{4:d},{5:.1f},{6:d},{7:.1f},{8:d},{9:.1f},{10:s},{11:s}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{default} ({olive}{3:.1f}%%{default}) {teamcolor}[ Health {green}{4}{default} ({olive}{5:.1f}%%{default}) {teamcolor}| Damage {green}{6}{default} ({olive}{7:.1f}%%{default}) {teamcolor}| Pills {green}{8}{default} ({olive}{9:.1f}%%{default}) {teamcolor}| Custom {olive}{10}{default} ({olive}{11}{default}){teamcolor} ]{default}"
     }
 
     "RoundBonusLite"
     {
-        "#format"   "{1:d},{2:d},{3:.1f}"
-        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}>"
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default})"
+    }
+
+    "RoundBonusLiteCustom"
+    {
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:s}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {teamcolor}[ Custom {olive}{5}{teamcolor} ]{default}"
     }
 
     "RoundBonusSimplePrevious"
     {
-        "#format"   "{1:d},{2:d},{3:.1f}"
-        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}>"
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default})"
     }
 
     "RoundBonusSimple"
     {
-        "#format"   "{1:d},{2:d},{3:.1f},{4:.0f},{5:.0f},{6:.0f}"
-        "en"        "Round {green}#{1}{default} Bonus: {green}{2}{default} <{olive}{3:.1f}%{default}> [HB: {olive}{4:.0f}%{default} | DB: {olive}{5:.0f}%{default} | Pills: {olive}{6:.0f}%{default}]"
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:.0f},{6:.0f},{7:.0f}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {teamcolor}[ Health {olive}{5:.0f}%%{teamcolor} | Damage {olive}{6:.0f}%%{teamcolor} | Pills {olive}{7:.0f}%%{teamcolor} ]{default}"
+    }
+
+    "RoundBonusSimpleCustom"
+    {
+        "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:.0f},{6:.0f},{7:.0f},{8:s}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {teamcolor}[ Health {olive}{5:.0f}%%{teamcolor} | Damage {olive}{6:.0f}%%{teamcolor} | Pills {olive}{7:.0f}%%{teamcolor} | Custom {olive}{8}{teamcolor} ]{default}"
     }
 
     "MapInfoTitle"
@@ -50,25 +74,25 @@
     "MapInfoTotalBonus"
     {
         "#format"   "{1:d}"
-        "en"        "Total Bonus: {green}{1}{default} <{olive}100.0%{default}>"
+        "en"        "Total Bonus: {green}{1}{default} <{olive}100.0%%{default}>"
     }
 
     "MapInfoHealthBonus"
     {
         "#format"   "{1:d},{2:.1f}"
-        "en"        "Health Bonus: {green}{1}{default} <{olive}{2:.1f}%{default}>"
+        "en"        "Health Bonus: {green}{1}{default} <{olive}{2:.1f}%%{default}>"
     }
 
     "MapInfoDamageBonus"
     {
         "#format"   "{1:d},{2:.1f}"
-        "en"        "Damage Bonus: {green}{1}{default} <{olive}{2:.1f}%{default}>"
+        "en"        "Damage Bonus: {green}{1}{default} <{olive}{2:.1f}%%{default}>"
     }
 
     "MapInfoPillsBonus"
     {
         "#format"   "{1:d},{2:d},{3:.1f}"
-        "en"        "Pills Bonus: {green}{1}{default} (max {green}{2}{default}) <{olive}{3:.1f}%{default}>"
+        "en"        "Pills Bonus: {green}{1}{default} (max {green}{2}{default}) <{olive}{3:.1f}%%{default}>"
     }
 
     "MapInfoTiebreaker"

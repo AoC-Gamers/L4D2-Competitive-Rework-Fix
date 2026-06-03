@@ -276,6 +276,7 @@ ConVar		  g_cvBonusPerSurvivorMultiplier;
 ConVar		  g_cvPermanentHealthProportion;
 ConVar		  g_cvPillsHpFactor;
 ConVar		  g_cvPillsMaxBonus;
+ConVar		  g_cvBonusTeamPrint;
 ConVar		  g_cvMode;
 ConVar		  g_cvDebug;
 ConVar		  g_cvValveSurvivalBonus;
@@ -378,6 +379,7 @@ public void OnPluginStart()
 	g_cvPermanentHealthProportion  = CreateConVar("smplus_permanent_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus");
 	g_cvPillsHpFactor			   = CreateConVar("smplus_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this");
 	g_cvPillsMaxBonus			   = CreateConVar("smplus_pills_max_bonus", "30", "Unused pills cannot be worth more than this");
+	g_cvBonusTeamPrint			   = CreateConVar("smplus_bonus_team_print", "0", "Replicate !bonus output to all survivor teammates when a survivor requests it");
 
 	g_cvLegacyEnable			   = CreateConVar("smplus_legacy_enable", "1", "Legacy score model enabled");
 	g_cvLegacyHBRatio			   = CreateConVar("smplus_legacy_health_bonus_ratio", "2.0", "Legacy health bonus multiplier", FCVAR_NONE, true, 0.25, true, 5.0);

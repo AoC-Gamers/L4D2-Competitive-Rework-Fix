@@ -406,17 +406,19 @@ public Action L4D2_OnEndVersusModeRound(bool countSurvivors)
 
 Action PrintRoundEndStats(Handle timer)
 {
+	int author = GetBonusMessageAuthor();
+
 	for (int team = 0; team <= GameRules_GetProp("m_bInSecondHalfOfRound"); team++)
 	{
-		CPrintToChatAll("%t %t", "Tag", "RoundBonusSummary", team + 1, RoundToFloor(g_fSurvivorBonus[team]), RoundToFloor(g_fMapBonus + float(g_iPillWorth * g_iTeamSize)), CalculateBonusPercent(g_fSurvivorBonus[team]), g_sSurvivorState[team]);
+		CPrintToChatAllEx(author, "%t %t", "Tag", "RoundBonusSummary", team + 1, RoundToFloor(g_fSurvivorBonus[team]), RoundToFloor(g_fMapBonus + float(g_iPillWorth * g_iTeamSize)), CalculateBonusPercent(g_fSurvivorBonus[team]), g_sSurvivorState[team]);
 	}
 
 	if (GameRules_GetProp("m_bInSecondHalfOfRound") && g_Runtime.tiebreakerEligibility[0] && g_Runtime.tiebreakerEligibility[1])
 	{
-		CPrintToChatAll("%t %t", "Tag", "TiebreakerScores", g_iSiDamage[0], g_iSiDamage[1]);
+		CPrintToChatAllEx(author, "%t %t", "Tag", "TiebreakerScores", g_iSiDamage[0], g_iSiDamage[1]);
 		if (g_iSiDamage[0] == g_iSiDamage[1])
 		{
-			CPrintToChatAll("%t %t", "Tag", "TiebreakerEqual");
+			CPrintToChatAllEx(author, "%t %t", "Tag", "TiebreakerEqual");
 		}
 	}
 

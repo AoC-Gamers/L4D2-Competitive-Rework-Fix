@@ -162,6 +162,27 @@ int GetLegacyCurrentRoundNumber()
 	return g_LegacyRound.secondRoundStarted ? 2 : 1;
 }
 
+int GetBonusMessageAuthor()
+{
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (IsSurvivor(client) && !IsFakeClient(client))
+		{
+			return client;
+		}
+	}
+
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (IsSurvivor(client))
+		{
+			return client;
+		}
+	}
+
+	return 0;
+}
+
 bool IsSurvivor(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && L4D_GetClientTeam(client) == L4DTeam_Survivor;

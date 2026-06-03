@@ -29,14 +29,12 @@
 	
 	"Notify_SpechudUsage"
 	{
-		"#format"	"{1:t}"
-		"en"		"{1} Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD"
+		"en"		"[{olive}HUD{default}] Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD"
 	}
 	
 	"Notify_TankhudUsage"
 	{
-		"#format"	"{1:t}"
-		"en"		"{1} Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD"
+		"en"		"[{olive}HUD{default}] Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD"
 	}
 
 	"Spechud_SurvivorsScavenge"
@@ -155,7 +153,7 @@
 
 	"Spechud_NetworkValue"
 	{
-		"#format"	"{1:i},{2:f}"
+		"#format"	"{1:d},{2:.0f}"
 		"en"		"Network: {1}ms / {2}"
 	}
 
@@ -244,19 +242,19 @@
 
 	"Spechud_HybridStats"
 	{
-		"#format"	"{1:f},{2:f},{3:i},{4:f}"
-		"en"		"> HB: {1:.0f}% | DB: {2:.0f}% | Pills: {3} / {4:.0f}%"
+		"#format"	"{1:.0f},{2:.0f},{3:d},{4:.0f}"
+		"en"		"> HB: {1:.0f}%% | DB: {2:.0f}%% | Pills: {3} / {4:.0f}%%"
 	}
 
 	"Spechud_BonusValue"
 	{
-		"#format"	"{1:i},{2:f}"
-		"en"		"> Bonus: {1} <{2:.1f}%>"
+		"#format"	"{1:d},{2:.1f}"
+		"en"		"> Bonus: {1} <{2:.1f}%%>"
 	}
 
 	"Spechud_DistanceValue"
 	{
-		"#format"	"{1:i}"
+		"#format"	"{1:d}"
 		"en"		"> Distance: {1}"
 	}
 

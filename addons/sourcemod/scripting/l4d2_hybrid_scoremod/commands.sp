@@ -114,7 +114,7 @@ Action CmdBonus(int client, int args)
 
 void PrintBonusMessage(int client, int author, const char[] format, any ...)
 {
-	char message[MAX_MESSAGE_LENGTH];
+	char message[256];
 	VFormat(message, sizeof(message), format, 4);
 
 	if (!ShouldPrintBonusToTeam(client))

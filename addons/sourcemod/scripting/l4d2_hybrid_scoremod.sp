@@ -12,7 +12,7 @@
 #include <readyup>
 #define REQUIRE_PLUGIN
 
-#define SURVIVOR_STATE_LENGTH 32
+#define SURVIVOR_STATE_LENGTH 64
 #define LIBRARY_L4DLIB "l4d2lib"
 #define LIBRARY_READYUP "readyup"
 #define SMPLUS_BONUS_TYPE_COUNT 4

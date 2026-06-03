@@ -372,26 +372,26 @@ public void OnPluginStart()
 		g_ClientSnapshotCache[client].Reset();
 	}
 
-	g_cvDebug					   = CreateConVar("smplus_debug", "0", "Enable scoremod debug output");
-	g_cvMode					   = CreateConVar("smplus_mode", "2", "Score mode: 0 = legacy, 1 = hybrid, 2 = zone");
-    
-	g_cvBonusPerSurvivorMultiplier = CreateConVar("smplus_bonus_per_survivor_multiplier", "0.5", "Total Survivor Bonus = this * Number of Survivors * Map Distance");
-	g_cvPermanentHealthProportion  = CreateConVar("smplus_permanent_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus");
-	g_cvPillsHpFactor			   = CreateConVar("smplus_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this");
-	g_cvPillsMaxBonus			   = CreateConVar("smplus_pills_max_bonus", "30", "Unused pills cannot be worth more than this");
-	g_cvBonusTeamPrint			   = CreateConVar("smplus_bonus_team_print", "0", "Replicate !bonus output to all survivor teammates when a survivor requests it");
+	g_cvDebug					   = CreateConVar("smplus_debug", "0", "Enable scoremod debug output", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvMode					   = CreateConVar("smplus_mode", "2", "Score mode: 0 = legacy, 1 = hybrid, 2 = zone", FCVAR_NONE, true, 0.0, true, 2.0);
 
-	g_cvLegacyEnable			   = CreateConVar("smplus_legacy_enable", "1", "Legacy score model enabled");
+	g_cvBonusPerSurvivorMultiplier = CreateConVar("smplus_bonus_per_survivor_multiplier", "0.5", "Total Survivor Bonus = this * Number of Survivors * Map Distance", FCVAR_NONE, true, 0.0);
+	g_cvPermanentHealthProportion  = CreateConVar("smplus_permanent_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvPillsHpFactor			   = CreateConVar("smplus_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this", FCVAR_NONE, true, 0.01);
+	g_cvPillsMaxBonus			   = CreateConVar("smplus_pills_max_bonus", "30", "Unused pills cannot be worth more than this", FCVAR_NONE, true, 0.0);
+	g_cvBonusTeamPrint			   = CreateConVar("smplus_bonus_team_print", "1", "Replicate !bonus output to all teammates on the caller's team when a player requests it", FCVAR_NONE, true, 0.0, true, 1.0);
+
+	g_cvLegacyEnable			   = CreateConVar("smplus_legacy_enable", "1", "Legacy score model enabled", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvLegacyHBRatio			   = CreateConVar("smplus_legacy_health_bonus_ratio", "2.0", "Legacy health bonus multiplier", FCVAR_NONE, true, 0.25, true, 5.0);
-	g_cvLegacySurvivalBonusRatio   = CreateConVar("smplus_legacy_survival_bonus_ratio", "0.0", "Legacy static survival bonus ratio", FCVAR_NONE);
+	g_cvLegacySurvivalBonusRatio   = CreateConVar("smplus_legacy_survival_bonus_ratio", "0.0", "Legacy static survival bonus ratio", FCVAR_NONE, true, 0.0);
 	g_cvLegacyTempMulti0		   = CreateConVar("smplus_legacy_temp_multi_incap_0", "0.30625", "Legacy temp health multiplier for zero incaps", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvLegacyTempMulti1		   = CreateConVar("smplus_legacy_temp_multi_incap_1", "0.17500", "Legacy temp health multiplier for one incap", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvLegacyTempMulti2		   = CreateConVar("smplus_legacy_temp_multi_incap_2", "0.10000", "Legacy temp health multiplier for two incaps", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_cvLegacyHealPercent		   = CreateConVar("smplus_legacy_first_aid_heal_percent", "0.8", "Legacy first aid heal percent");
-	g_cvLegacyPillPercent		   = CreateConVar("smplus_legacy_pain_pills_health_value", "50", "Legacy pills buffer amount");
-	g_cvLegacyAdrenPercent		   = CreateConVar("smplus_legacy_adrenaline_health_buffer", "30", "Legacy adrenaline buffer amount");
-	g_cvLegacyMapMulti			   = CreateConVar("smplus_legacy_map_multi", "1", "Legacy max bonus scales to map distance");
-	g_cvLegacyCustomMaxDistance	   = CreateConVar("smplus_legacy_custom_max_distance", "0", "Legacy custom max distance from l4d2lib");
+	g_cvLegacyHealPercent		   = CreateConVar("smplus_legacy_first_aid_heal_percent", "0.8", "Legacy first aid heal percent", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvLegacyPillPercent		   = CreateConVar("smplus_legacy_pain_pills_health_value", "50", "Legacy pills buffer amount", FCVAR_NONE, true, 0.0);
+	g_cvLegacyAdrenPercent		   = CreateConVar("smplus_legacy_adrenaline_health_buffer", "30", "Legacy adrenaline buffer amount", FCVAR_NONE, true, 0.0);
+	g_cvLegacyMapMulti			   = CreateConVar("smplus_legacy_map_multi", "1", "Legacy max bonus scales to map distance", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvLegacyCustomMaxDistance	   = CreateConVar("smplus_legacy_custom_max_distance", "0", "Legacy custom max distance from l4d2lib", FCVAR_NONE, true, 0.0);
 
 	g_cvValveSurvivalBonus		   = FindConVar("vs_survival_bonus");
 	g_cvValveTieBreaker			   = FindConVar("vs_tiebreak_bonus");

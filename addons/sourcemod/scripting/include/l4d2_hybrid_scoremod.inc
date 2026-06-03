@@ -22,9 +22,9 @@ enum SMPlusBonusType
 /**
  * Returns the active score model mode.
  *
- * @return 0 = legacy, 1 = hybrid, 2 = zone.
+ * @return SMPlusMode_Legacy, SMPlusMode_Hybrid, or SMPlusMode_Zone.
  */
-native int SMPlus_GetMode();
+native SMPlusMode SMPlus_GetMode();
 
 /**
  * Adds an external bonus adjustment.

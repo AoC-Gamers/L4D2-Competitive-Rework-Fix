@@ -327,6 +327,12 @@
 		"es"		"> Vida: {1:.0f}%% | Daño: {2:.0f}%% | Píldoras: {3} / {4:.0f}%%"
 	}
 
+	"Spechud_HybridLegacyStats"
+	{
+		"#format"	"{1:.0f}"
+		"es"		"> Vida: {1:.0f}%%"
+	}
+
 	"Spechud_BonusValue"
 	{
 		"#format"	"{1:d},{2:.1f}"

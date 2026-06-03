@@ -564,6 +564,7 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 			{
 				KeyValues snapshot = new KeyValues("scoremod_snapshot");
 				SMPlus_FillSnapshot(snapshot);
+				SMPlusMode scoreMode = SMPlus_GetMode();
 
 				int healthBonus = 0;
 				int maxHealthBonus = 0;
@@ -593,15 +594,22 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 				}
 				
 				DrawPanelText(hSpecHud, " ");
-				
-				FormatEx(	line,
-							sizeof(line),
-							"%T",
-							"Spechud_HybridStats",
-							target,
-							PercentFloat(healthBonus, maxHealthBonus),
-							PercentFloat(damageBonus, maxDamageBonus),
-							pillsBonus, PercentFloat(pillsBonus, maxPillsBonus));
+
+				if (scoreMode == SMPlusMode_Legacy)
+				{
+					FormatEx(line, sizeof(line), "%T", "Spechud_HybridLegacyStats", target, PercentFloat(healthBonus, maxHealthBonus));
+				}
+				else
+				{
+					FormatEx(	line,
+								sizeof(line),
+								"%T",
+								"Spechud_HybridStats",
+								target,
+								PercentFloat(healthBonus, maxHealthBonus),
+								PercentFloat(damageBonus, maxDamageBonus),
+								pillsBonus, PercentFloat(pillsBonus, maxPillsBonus));
+				}
 				DrawPanelText(hSpecHud, line);
 				
 				FormatEx(line, sizeof(line), "%T", "Spechud_BonusValue", target, totalBonus, PercentFloat(totalBonus, maxTotalBonus));

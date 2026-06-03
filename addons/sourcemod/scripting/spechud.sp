@@ -13,7 +13,6 @@
 #include <pause>
 #include <l4d2_boss_percents>
 #include <l4d2_hybrid_scoremod>
-#include <l4d2_scoremod>
 #include <l4d_tank_control_eq>
 #include <lerpmonitor>
 #include <witch_and_tankifier>
@@ -107,10 +106,6 @@ public void OnLibraryAdded(const char[] name)
 	{
 		g_Runtime.hybridScoremod = true;
 	}
-	else if (StrEqual(name, LIBRARY_L4D2_SCOREMOD))
-	{
-		g_Runtime.scoremod = true;
-	}
 	else if (StrEqual(name, LIBRARY_L4D_TANK_CONTROL_EQ))
 	{
 		g_Runtime.tankControlEq = true;
@@ -162,10 +157,6 @@ public void OnLibraryRemoved(const char[] name)
 	else if (StrEqual(name, LIBRARY_L4D2_HYBRID_SCOREMOD))
 	{
 		g_Runtime.hybridScoremod = false;
-	}
-	else if (StrEqual(name, LIBRARY_L4D2_SCOREMOD))
-	{
-		g_Runtime.scoremod = false;
 	}
 	else if (StrEqual(name, LIBRARY_L4D_TANK_CONTROL_EQ))
 	{

@@ -18,8 +18,8 @@ La variante `zone` y la variante `hybrid` compartían casi toda su implementaci�
 
 ## Comportamiento Actual
 
-- `smplus_zone_mode 1` reproduce el comportamiento que antes entregaba `l4d2_hybrid_scoremod_zone`
-- `smplus_zone_mode 0` usa el comportamiento tradicional de `l4d2_hybrid_scoremod`
+- `smplus_mode 2` reproduce el comportamiento que antes entregaba `l4d2_hybrid_scoremod_zone`
+- `smplus_mode 1` usa el comportamiento tradicional de `l4d2_hybrid_scoremod`
 - el valor por defecto está pensado para cubrir los modos que antes cargaban `zone`
 
 ## Compatibilidad
@@ -31,8 +31,8 @@ La variante `zone` y la variante `hybrid` compartían casi toda su implementaci�
 
 ## Migración de Configs
 
-- modos tradicionales como `eq` y `acemodrv` deben declarar `confogl_addcvar smplus_zone_mode 0`
-- modos que antes cargaban `zone` no necesitan `smplus_zone_mode 1` explícito si usan el valor por defecto
+- modos tradicionales como `eq` y `acemodrv` deben declarar `confogl_addcvar smplus_mode 1`
+- modos que antes cargaban `zone` no necesitan `smplus_mode 2` explícito si usan el valor por defecto
 - en flujos donde el repo original se modifica antes de instalarse, el hook `sir.default.sh` de `Docker-L4D2-AoC` es el punto correcto para aplicar esta migración sin editar el upstream
 
 ## Referencia Histórica

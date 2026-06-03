@@ -1,4 +1,4 @@
-#include "spechud/helpers.sp"
+#include "helpers.sp"
 
 /**
  * @brief Draws the HUD panels for all eligible clients.
@@ -542,15 +542,35 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 		{
 			if (g_Runtime.hybridScoremod)
 			{
-				int healthBonus = SMPlus_GetBonus(SMPlusBonusType_Health);
-				int maxHealthBonus = SMPlus_GetMaxBonus(SMPlusBonusType_Health);
-				int damageBonus = SMPlus_GetBonus(SMPlusBonusType_Damage);
-				int maxDamageBonus = SMPlus_GetMaxBonus(SMPlusBonusType_Damage);
-				int pillsBonus = SMPlus_GetBonus(SMPlusBonusType_Pills);
-				int maxPillsBonus = SMPlus_GetMaxBonus(SMPlusBonusType_Pills);
-				
-				int totalBonus = SMPlus_GetBonus(SMPlusBonusType_Total);
-				int maxTotalBonus = SMPlus_GetMaxBonus(SMPlusBonusType_Total);
+				KeyValues snapshot = new KeyValues("scoremod_snapshot");
+				SMPlus_FillSnapshot(snapshot);
+
+				int healthBonus = 0;
+				int maxHealthBonus = 0;
+				int damageBonus = 0;
+				int maxDamageBonus = 0;
+				int pillsBonus = 0;
+				int maxPillsBonus = 0;
+				int totalBonus = 0;
+				int maxTotalBonus = 0;
+
+				if (snapshot.JumpToKey("bonus"))
+				{
+					healthBonus = RoundToFloor(snapshot.GetFloat("health"));
+					damageBonus = RoundToFloor(snapshot.GetFloat("damage"));
+					pillsBonus = RoundToFloor(snapshot.GetFloat("pills"));
+					totalBonus = RoundToFloor(snapshot.GetFloat("total"));
+					snapshot.GoBack();
+				}
+
+				if (snapshot.JumpToKey("bonus_max"))
+				{
+					maxHealthBonus = RoundToFloor(snapshot.GetFloat("health"));
+					maxDamageBonus = RoundToFloor(snapshot.GetFloat("damage"));
+					maxPillsBonus = RoundToFloor(snapshot.GetFloat("pills"));
+					maxTotalBonus = RoundToFloor(snapshot.GetFloat("total"));
+					snapshot.GoBack();
+				}
 				
 				DrawPanelText(hSpecHud, " ");
 				
@@ -569,22 +589,8 @@ bool FillScoreInfo(Panel hSpecHud, int target)
 				
 				FormatEx(line, sizeof(line), "%T", target, "Spechud_DistanceValue", g_iMaxDistance);
 				DrawPanelText(hSpecHud, line);
+				delete snapshot;
 			}
-			
-			else if (g_Runtime.scoremod)
-			{
-				int totalBonus = SMClassic_GetBonus(SMClassicBonusType_Total);
-				int maxTotalBonus = SMClassic_GetMaxBonus(SMClassicBonusType_Total);
-				
-				DrawPanelText(hSpecHud, " ");
-				
-				FormatEx(line, sizeof(line), "%T", target, "Spechud_BonusValue", totalBonus, PercentFloat(totalBonus, maxTotalBonus));
-				DrawPanelText(hSpecHud, line);
-				
-				FormatEx(line, sizeof(line), "%T", target, "Spechud_DistanceValue", g_iMaxDistance);
-				DrawPanelText(hSpecHud, line);
-			}
-			
 		}
 	}
 
@@ -854,7 +860,7 @@ bool FillGameInfoScavenge(Panel hSpecHud, int target)
 bool FillGameInfoVersus(Panel hSpecHud, int target)
 {
 	static char line[64];
-	bool hasScoreBlock = (g_Runtime.scoremod || g_Runtime.hybridScoremod);
+	bool hasScoreBlock = g_Runtime.hybridScoremod;
 	bool hasBossBlock = (g_Runtime.l4dBossPercent && g_BossRound.tankCount > 0);
 	bool hasTankSelection = (g_Runtime.tankSelection && g_BossRound.tankCount > 0);
 

@@ -175,7 +175,11 @@ void BuildWeaponSnapshot(int client, WeaponSnapshot snap)
 	snap.secondaryWep = GetPlayerWeaponSlot(client, L4DWeaponSlot_Secondary);
 	snap.activeWepId = IdentifyWeapon(snap.activeWep);
 	snap.primaryWepId = IdentifyWeapon(snap.primaryWep);
-	snap.dualWield = (snap.secondaryWep > 0 && view_as<bool>(GetEntProp(snap.secondaryWep, Prop_Send, "m_isDualWielding")));
+	snap.dualWield = false;
+	if (snap.secondaryWep > 0 && IdentifyWeapon(snap.secondaryWep) == WEPID_PISTOL)
+	{
+		snap.dualWield = view_as<bool>(GetEntProp(snap.secondaryWep, Prop_Send, "m_isDualWielding"));
+	}
 	snap.activeClip = (snap.activeWep > 0 ? GetEntProp(snap.activeWep, Prop_Send, "m_iClip1") : -1);
 	snap.primaryClip = (snap.primaryWep > 0 ? GetEntProp(snap.primaryWep, Prop_Send, "m_iClip1") : -1);
 	snap.primaryExtra = (snap.primaryWep > 0 ? L4D_GetReserveAmmo(client, snap.primaryWep) : -1);
@@ -216,7 +220,13 @@ void BuildInfectedSnapshot(int client, InfectedSnapshot snap)
 	snap.victim = L4D2_GetSurvivorVictim(client);
 	snap.cooldown = 0;
 	snap.hasCooldown = false;
+	snap.className[0] = '\0';
 	
+	if (snap.zClass < L4D2ZombieClass_Smoker || snap.zClass > L4D2ZombieClass_Tank)
+	{
+		return;
+	}
+
 	strcopy(snap.className, sizeof(snap.className), L4D2_GetZombieClassname(snap.zClass));
 	
 	if (!snap.alive || snap.zClass == L4D2ZombieClass_Tank || snap.ghost)
@@ -308,6 +318,9 @@ bool BuildInfectedLine(InfectedSnapshot infected, int target, char[] line, int l
 		return false;
 
 	if (infected.zClass == L4D2ZombieClass_Tank)
+		return false;
+
+	if (infected.className[0] == '\0')
 		return false;
 
 	GetClientFixedName(infected.client, name, sizeof(name), true);

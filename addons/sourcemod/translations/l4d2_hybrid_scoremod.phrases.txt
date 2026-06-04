@@ -8,13 +8,13 @@
     "RoundBonusSummary"
     {
         "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:s}"
-        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {blue}[ {5}{blue} ]{default}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {olive}[ {5}{olive} ]{default}"
     }
 
     "RoundBonusSummaryCustom"
     {
         "#format"   "{1:d},{2:d},{3:d},{4:.1f},{5:s},{6:s}"
-        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {blue}[ {5}{blue} | Custom {olive}{6}{blue} ]{default}"
+        "en"        "{teamcolor}Round #{green}{1}{teamcolor}: {green}{2}{teamcolor}/{green}{3}{default} ({olive}{4:.1f}%%{default}) {olive}[ {5}{olive} | Custom {olive}{6}{olive} ]{default}"
     }
 
     "RoundBonusFull"

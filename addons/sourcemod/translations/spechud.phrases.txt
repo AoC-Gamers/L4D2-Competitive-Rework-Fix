@@ -20,11 +20,31 @@
 		"#format"	"{1:t},{2:t}"
 		"en"		"{1} Spectator HUD is now {2}"
 	}
+
+	"Notify_SpechudStateOn"
+	{
+		"en"		"[{olive}HUD{default}] Spectator HUD is now {blue}on{default}"
+	}
+
+	"Notify_SpechudStateOff"
+	{
+		"en"		"[{olive}HUD{default}] Spectator HUD is now {red}off{default}"
+	}
 	
 	"Notify_TankhudState"
 	{
 		"#format"	"{1:t},{2:t}"
 		"en"		"{1} Tank HUD is now {2}"
+	}
+
+	"Notify_TankhudStateOn"
+	{
+		"en"		"[{olive}HUD{default}] Tank HUD is now {blue}on{default}"
+	}
+
+	"Notify_TankhudStateOff"
+	{
+		"en"		"[{olive}HUD{default}] Tank HUD is now {red}off{default}"
 	}
 	
 	"Notify_SpechudUsage"
@@ -154,7 +174,7 @@
 	"Spechud_NetworkValue"
 	{
 		"#format"	"{1:d},{2:.0f}"
-		"en"		"Network: {1}ms / {2}"
+		"en"		"Network: {1}ms / lerp {2:.0f}"
 	}
 
 	"Spechud_NetworkValueNoLerp"

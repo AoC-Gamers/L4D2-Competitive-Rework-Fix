@@ -156,7 +156,7 @@ Action ToggleSpecHudCmd(int client, int args)
 	
 	g_bSpecHudActive[client] = !g_bSpecHudActive[client];
 	
-	CPrintToChat(client, "%t", "Notify_SpechudState", "Tag", (g_bSpecHudActive[client] ? "on" : "off"));
+	CPrintToChat(client, "%t", (g_bSpecHudActive[client] ? "Notify_SpechudStateOn" : "Notify_SpechudStateOff"));
 	return Plugin_Handled;
 }
 
@@ -170,6 +170,6 @@ Action ToggleTankHudCmd(int client, int args)
 	
 	g_bTankHudActive[client] = !g_bTankHudActive[client];
 	
-	CPrintToChat(client, "%t", "Notify_TankhudState", "Tag", (g_bTankHudActive[client] ? "on" : "off"));
+	CPrintToChat(client, "%t", (g_bTankHudActive[client] ? "Notify_TankhudStateOn" : "Notify_TankhudStateOff"));
 	return Plugin_Handled;
 }

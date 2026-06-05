@@ -20,11 +20,31 @@
 		"#format"	"{1:t},{2:t}"
 		"es"		"{1} El HUD de espectador ahora está {2}"
 	}
+
+	"Notify_SpechudStateOn"
+	{
+		"es"		"[{olive}HUD{default}] El HUD de espectador ahora está {blue}activado{default}"
+	}
+
+	"Notify_SpechudStateOff"
+	{
+		"es"		"[{olive}HUD{default}] El HUD de espectador ahora está {red}desactivado{default}"
+	}
 	
 	"Notify_TankhudState"
 	{
 		"#format"	"{1:t},{2:t}"
-		"es"		"{1} El HUD de tanque ahora está {2}"
+		"es"		"{1} El Tank HUD ahora está {2}"
+	}
+
+	"Notify_TankhudStateOn"
+	{
+		"es"		"[{olive}HUD{default}] El Tank HUD ahora está {blue}activado{default}"
+	}
+
+	"Notify_TankhudStateOff"
+	{
+		"es"		"[{olive}HUD{default}] El Tank HUD ahora está {red}desactivado{default}"
 	}
 	
 	"Notify_SpechudUsage"
@@ -34,7 +54,7 @@
 	
 	"Notify_TankhudUsage"
 	{
-		"es"		"[{olive}HUD{default}] Escribe {green}!tankhud{default} en el chat para cambiar el {red}HUD de tanque"
+		"es"		"[{olive}HUD{default}] Escribe {green}!tankhud{default} en el chat para cambiar el {red}Tank HUD"
 	}
 
 	"Spechud_SurvivorsScavenge"
@@ -114,7 +134,7 @@
 	"Spechud_TankHudTitle"
 	{
 		"#format"	"{1:s}"
-		"es"		"{1} :: HUD de Tanque"
+		"es"		"{1} :: Tank HUD"
 	}
 
 	"Spechud_ControlPlayer"
@@ -154,7 +174,7 @@
 	"Spechud_NetworkValue"
 	{
 		"#format"	"{1:d},{2:.0f}"
-		"es"		"Red: {1}ms / {2}"
+		"es"		"Red: {1}ms / lerp {2:.0f}"
 	}
 
 	"Spechud_NetworkValueNoLerp"

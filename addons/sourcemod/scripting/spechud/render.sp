@@ -730,7 +730,17 @@ bool BuildTankInfoSnapshot(int tank, TankHudSnapshot snap, int target)
 
 	if (!IsFakeClient(tank))
 	{
-		FormatEx(snap.frustration, sizeof(snap.frustration), "%T", "Spechud_FrustrationValue", target, L4D_GetTankFrustration(tank));
+		int frustration = 100 - L4D_GetTankFrustration(tank);
+		if (frustration < 0)
+		{
+			frustration = 0;
+		}
+		else if (frustration > 100)
+		{
+			frustration = 100;
+		}
+
+		FormatEx(snap.frustration, sizeof(snap.frustration), "%T", "Spechud_FrustrationValue", target, frustration);
 	}
 	else
 	{
@@ -742,7 +752,13 @@ bool BuildTankInfoSnapshot(int tank, TankHudSnapshot snap, int target)
 		int latencyMs = RoundToNearest(GetClientAvgLatency(tank, NetFlow_Both) * 1000.0);
 		if (g_Runtime.lerpMonitor)
 		{
-			FormatEx(snap.network, sizeof(snap.network), "%T", "Spechud_NetworkValue", target, latencyMs, LM_GetLerpTime(tank) * 1000.0);
+			float lerpTime = LM_GetStoredLerpTime(tank);
+			if (lerpTime < 0.0)
+			{
+				lerpTime = LM_GetCurrentLerpTime(tank);
+			}
+
+			FormatEx(snap.network, sizeof(snap.network), "%T", "Spechud_NetworkValue", target, latencyMs, lerpTime * 1000.0);
 		}
 		else
 		{
@@ -889,8 +905,10 @@ bool FillGameInfoVersus(Panel hSpecHud, int target)
 {
 	static char line[64];
 	bool hasScoreBlock = g_Runtime.hybridScoremod;
-	bool hasBossBlock = (g_Runtime.l4dBossPercent && g_BossRound.tankCount > 0);
-	bool hasTankSelection = (g_Runtime.tankSelection && g_BossRound.tankCount > 0);
+	bool hasBossBlock = (g_Runtime.l4dBossPercent
+		&& (g_BossRound.roundHasFlowTank || g_BossRound.roundHasFlowWitch || g_BossRound.customBossSys));
+	bool hasTankSelection = (g_Runtime.tankSelection
+		&& (g_BossRound.roundHasFlowTank || g_BossRound.customBossSys));
 
 	if (!hasScoreBlock && !hasBossBlock && !hasTankSelection)
 	{
@@ -937,7 +955,7 @@ bool BuildBossFlowInfo(char[] line, int length, int target)
 	line[0] = '\0';
 
 	static char buffer[16];
-	if (g_BossRound.tankCount > 0)
+	if (g_BossRound.roundHasFlowTank || g_BossRound.customBossSys)
 	{
 		if ((g_BossRound.flowTankActive && g_BossRound.roundHasFlowTank) || g_BossRound.customBossSys)
 		{
@@ -952,7 +970,7 @@ bool BuildBossFlowInfo(char[] line, int length, int target)
 		hasLine = true;
 	}
 
-	if (g_BossRound.witchCount > 0)
+	if (g_BossRound.roundHasFlowWitch || g_BossRound.customBossSys)
 	{
 		if ((g_BossRound.roundHasFlowWitch || g_BossRound.customBossSys))
 		{
@@ -994,7 +1012,7 @@ bool BuildBossFlowInfo(char[] line, int length, int target)
  */
 bool BuildTankSelectionInfo(char[] line, int length, int target)
 {
-	if (!g_Runtime.tankSelection || g_BossRound.tankCount <= 0)
+	if (!g_Runtime.tankSelection || (!g_BossRound.roundHasFlowTank && !g_BossRound.customBossSys))
 	{
 		return false;
 	}

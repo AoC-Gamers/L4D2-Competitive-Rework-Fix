@@ -46,6 +46,9 @@ Actualmente:
 
 ## Build Local
 
+La copia de `steamidtools_stock.inc` corresponde a SteamIDTools 2.5.0 y ofrece
+conversiones locales de identidad sin requerir el plugin proveedor.
+
 Targets disponibles:
 
 - `make deps-smx`

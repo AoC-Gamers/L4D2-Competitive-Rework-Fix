@@ -106,5 +106,10 @@ Los comandos de registro/remoción ya no abren menús cuando se ejecutan sin arg
 
 - el plugin también depende de `common.phrases` y de su archivo base `caster_system.phrases`
 - el comportamiento soportado queda centrado en listas locales, no en backend SQL
-- el include público expone `bKickSpecImmunity(...)` como nombre principal y deja `bKickSpecInmunity(...)` como wrapper legacy
+- el include público expone `bCaster(...)`, `bCasterWhitelist(...)` y `bKickSpecImmunity(...)` con `int accountId` y `CasterSystemAction`
+- se retiraron los wrappers legacy `IsClientCaster(...)`, `IsIDCaster(...)` y `bKickSpecInmunity(...)`; es necesario recompilar los consumidores con el include actual
+- `specrates` y el panel de `readyup` consultan `bCaster(accountId, CasterSystemAction_Get)` tras comprobar la biblioteca y que el AccountID sea mayor que cero
+- las fuentes migradas de `caster_assister`, `specrates` y `readyup` en el repo base también requieren el proveedor de este override en ejecución; el proveedor original del base conserva su API antigua
+- el include del base declara `bCaster` y `CasterSystemAction` para compilar sus consumidores con sus propios includes; sus declaraciones legacy se conservan para documentar el contrato del proveedor original
+- el include ya no importa `steamidtools_stock.inc`, porque la API pública recibe AccountID y no convierte identificadores Steam
 - si en el futuro se agregan fixes locales concretos, deben documentarse aquí

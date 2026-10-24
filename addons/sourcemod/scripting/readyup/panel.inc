@@ -133,7 +133,8 @@ void UpdatePanel()
 			else
 			{
 				++specCount;
-				if (casterSystemAvailable && IsClientCaster(client))
+				int accountId = casterSystemAvailable ? GetSteamAccountID(client) : 0;
+				if (casterSystemAvailable && accountId > 0 && bCaster(accountId, CasterSystemAction_Get))
 				{
 					++casterCount;
 					Format(nameBuf, sizeof(nameBuf), "%s\n", nameBuf);

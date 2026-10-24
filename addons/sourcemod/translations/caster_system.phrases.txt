@@ -1,149 +1,257 @@
 "Phrases"
 {
-// The following uses bracket style color tags (see colors.inc)
-	"SelfCastNotAllowed"
+	// Keep phrase names and #format contracts synchronized with caster_system.sp.
+	"Prefix"
 	{
-		"en"		"{blue}[{default}Cast{blue}] {default}You are not allowed to register as a caster {green}on this server{default}."
+		"en"		"{blue}[{default}Caster{blue}]{default}"
 	}
 
-	"SelfCast1"
+	"Use"
 	{
-		"en"		"{blue}[{default}Cast{blue}] {default}You have registered yourself as a caster."
+		"en"		"Usage"
 	}
 
-	"SelfCast2"
+	"ForbidAddons"
 	{
-		"en"		"{blue}[{default}Cast{blue}] {default}Reconnect to make your Addons work."
+		"en"		"Addons are now {green}forbidden{default} for casters."
 	}
 
-	"RegCasterTarget"
+	"AllowAddons"
+	{
+		"en"		"Addons are now {green}allowed{default} for casters."
+	}
+
+	"Reconnect"
+	{
+		"en"		"You will be reconnected to the server in 3 seconds."
+	}
+
+	"CasterReconnect"
+	{
+		"en"		"Reconnect to apply the caster addon settings."
+	}
+
+	"CasterPlay"
+	{
+		"en"		"Unregister as a caster before playing."
+	}
+
+	"UseNoCast"
+	{
+		"en"		"Use {green}!uncast{default} to unregister as a caster."
+	}
+
+	"AuthIdError"
+	{
+		"#format"	"{1:s}"
+		"en"		"Could not obtain a valid Steam AccountID ({1}). Wait for the player to finish connecting."
+	}
+
+	"CasterFound"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} is already registered as a caster."
+	}
+
+	"CasterReg"
+	{
+		"#format"	"{1:s}"
+		"en"		"Registered {1} as a caster."
+	}
+
+	"CasterRegFrom"
 	{
 		"#format"	"{1:N}"
-		"en"		"{default}[{olive}!{default}] {blue}Admin {default}({olive}{1}{default}) has registered you as a caster"
+		"en"		"Admin {1} registered you as a caster."
 	}
 
-	"Reconnect1"
+	"CasterRegError"
 	{
-		"en"		"{blue}[{default}Reconnect{blue}] {default}You will be reconnected to the server.."
+		"#format"	"{1:d}"
+		"en"		"Could not register AccountID {1} as a caster."
 	}
 
-	"Reconnect2"
+	"WhitelistFound"
 	{
-		"en"		"{blue}[{default}Reconnect{blue}] {default}There's a black screen instead of a loading bar!"
+		"#format"	"{1:s}"
+		"en"		"{1} is already on the caster whitelist."
 	}
 
-	"UnregCasterTarget"
+	"WhitelistReg"
+	{
+		"#format"	"{1:s}"
+		"en"		"Added {1} to the caster whitelist."
+	}
+
+	"WhitelistRegFrom"
 	{
 		"#format"	"{1:N}"
-		"en"		"{default}[{olive}!{default}] {default}You are unregistered as a caster by {blue}Admin {default}({olive}{1}{default})"
+		"en"		"Admin {1} added you to the caster whitelist."
 	}
-	
+
+	"WhitelistRegError"
+	{
+		"#format"	"{1:d}"
+		"en"		"Could not add AccountID {1} to the caster whitelist."
+	}
+
+	"MenuPlayersList"
+	{
+		"en"		"Select a player to register:"
+	}
+
+	"ListPrinted"
+	{
+		"en"		"The list has been printed to your console."
+	}
+
+	"CasterReset"
+	{
+		"en"		"The caster list has been cleared."
+	}
+
+	"CasterNoFound"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} is not registered as a caster."
+	}
+
+	"CasterRemove"
+	{
+		"#format"	"{1:s}"
+		"en"		"Removed {1} from the caster list."
+	}
+
+	"CasterRemoveFrom"
+	{
+		"#format"	"{1:N}"
+		"en"		"Admin {1} removed you from the caster list."
+	}
+
+	"CasterRemoveError"
+	{
+		"#format"	"{1:d}"
+		"en"		"Could not remove AccountID {1} from the caster list."
+	}
+
+	"WhitelistNoFound"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} is not on the caster whitelist."
+	}
+
+	"WhitelistRemove"
+	{
+		"#format"	"{1:s}"
+		"en"		"Removed {1} from the caster whitelist."
+	}
+
+	"WhitelistRemoveFrom"
+	{
+		"#format"	"{1:N}"
+		"en"		"Admin {1} removed you from the caster whitelist."
+	}
+
+	"WhitelistRemoveError"
+	{
+		"#format"	"{1:d}"
+		"en"		"Could not remove AccountID {1} from the caster whitelist."
+	}
+
+	"MenuCastersList"
+	{
+		"en"		"Select a caster to remove:"
+	}
+
+	"MenuWhitelistList"
+	{
+		"en"		"Select a player to remove from the whitelist:"
+	}
+
+	"NoTargetsToRemove"
+	{
+		"en"		"No players available to remove."
+	}
+
+	"WhitelistReset"
+	{
+		"en"		"The caster whitelist has been cleared."
+	}
+
+	"SelfRegNoAdmin"
+	{
+		"en"		"Only admins can register other players as casters."
+	}
+
+	"SelfRegDisabled"
+	{
+		"en"		"Caster self-registration is disabled."
+	}
+
+	"WhitelistEmpty"
+	{
+		"en"		"The caster whitelist is empty. Contact an admin to register."
+	}
+
+	"SelfRegWhitelistNotFound"
+	{
+		"en"		"You must be on the caster whitelist to register. Contact an admin."
+	}
+
+	"SelfRegCasterFound"
+	{
+		"en"		"You are already registered as a caster."
+	}
+
+	"SelfRegSuccess"
+	{
+		"en"		"You have registered yourself as a caster."
+	}
+
+	"CasterEmpty"
+	{
+		"en"		"The caster list is empty."
+	}
+
+	"UnRegCasterNonAdmin"
+	{
+		"en"		"Only admins can remove other casters. Use !uncast without arguments to remove yourself."
+	}
+
 	"KickSpecsAdmin"
 	{
 		"#format"	"{1:N}"
-		"en"		"[{green}!{default}] {blue}Spectators {default}are kicked by {blue}Admin {default}({olive}{1}{default})"
+		"en"		"Spectators were kicked by admin {1}."
 	}
-	
+
 	"KickSpecsVoteSpec"
 	{
-		"en"		"[{olive}Cast{default}] {blue}Spectators {default}are not allowed to call a vote for {green}kicking specs{default}."
+		"en"		"Spectators cannot call a vote to kick spectators."
 	}
-	
+
 	"VoteInProgress"
 	{
-		"en"		"[{olive}Cast{default}] There's {olive}a vote {green}in progress{default}."
+		"en"		"A vote is already in progress."
 	}
-	
+
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"en"		"[{olive}Cast{default}] Wait for another {blue}{1}s {default}to call a vote."
-	}
-	
-	"ForbidAddons"
-	{
-		"en"		"{blue}[{default}!{blue}] {default}Addons are now {green}forbidden {default}for casters."
-	}
-	
-	"AllowAddons"
-	{
-		"en"		"{blue}[{default}!{blue}] {default}Addons are now {green}allowed {default}for casters."
-	}
-	
-	"CasterCheck1"
-	{
-		"en"		"{default}<{olive}Cast{default}> Unregister from casting first before playing."
-	}
-	
-	"CasterCheck2"
-	{
-		"en"		"{default}<{olive}Cast{default}> Use {green}!notcasting {default}/ {green}!uncast"
+		"en"		"Wait {1} seconds before calling another vote."
 	}
 
-	
-// The following are not allowed to use any color tag
-	"RegCasterReply"
-	{
-		"#format"	"{1:N}"
-		"en"		"Registered {1} as a caster"
-	}
-	
-	"CasterSteamIDError"
-	{
-		"en"		"Couldn't find Steam ID.  Check for typos and let the player get fully connected."
-	}
-
-	"UnregCasterNonAdmin"
-	{
-		"en"		"Only admins can remove other casters. Use sm_notcasting without arguments if you wish to remove yourself."
-	}
-
-	"UnregCasterSuccess"
-	{
-		"#format"	"{1:N}"
-		"en"		"{1} is no longer a caster"
-	}
-	
-	"CasterDBReset"
-	{
-		"en"		"[casters_database] Reset successfully"
-	}
-	
-	"CasterDBAdd"
-	{
-		"#format"	"{1:s}"
-		"en"		"[casters_database] Added '{1}'"
-	}
-	
-	"CasterDBRemove"
-	{
-		"#format"	"{1:s}"
-		"en"		"[casters_database] Removed '{1}'"
-	}
-	
-	"CasterDBFound"
-	{
-		"#format"	"{1:s}"
-		"en"		"[casters_database] '{1}' already exists"
-	}
-	
-	"CasterDBError"
-	{
-		"en"		"[casters_database] No args specified / empty buffer"
-	}
-	
 	"KickSpecsVoteTitle"
 	{
-		"en"		"Kick Non-Admin & Non-Casting Spectators?"
+		"en"		"Kick spectators without admin, caster or spectator immunity?"
 	}
-	
+
 	"KickSpecsVoteSuccess"
 	{
-		"en"		"Ciao Spectators!"
+		"en"		"Spectators will be kicked."
 	}
-	
+
 	"KickSpecsReason"
 	{
-		"en"		"No Spectators, please!"
+		"en"		"Spectators were removed by an admin or a successful vote."
 	}
 }

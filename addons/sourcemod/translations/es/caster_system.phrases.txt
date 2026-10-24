@@ -1,146 +1,257 @@
 "Phrases"
 {
-    "SelfCastNotAllowed"
-    {
-        "es"    "{blue}[{default}Cast{blue}] {default}No tienes permiso para registrarte como caster {green}en este servidor{default}."
-    }
+	// Keep phrase names and #format contracts synchronized with caster_system.sp.
+	"Prefix"
+	{
+		"es"		"{blue}[{default}Caster{blue}]{default}"
+	}
 
-    "SelfCast1"
-    {
-        "es"    "{blue}[{default}Cast{blue}] {default}Te has registrado como caster."
-    }
+	"Use"
+	{
+		"es"		"Uso"
+	}
 
-    "SelfCast2"
-    {
-        "es"    "{blue}[{default}Cast{blue}] {default}Reconectate para que tus addons funcionen."
-    }
+	"ForbidAddons"
+	{
+		"es"		"Los addons ahora están {green}prohibidos{default} para los casters."
+	}
 
-    "RegCasterTarget"
-    {
-        "#format"    "{1:N}"
-        "es"    "{default}[{olive}!{default}] {blue}Admin {default}({olive}{1}{default}) te ha registrado como caster"
-    }
+	"AllowAddons"
+	{
+		"es"		"Los addons ahora están {green}permitidos{default} para los casters."
+	}
 
-    "Reconnect1"
-    {
-        "es"    "{blue}[{default}Reconnect{blue}] {default}Seras reconectado al servidor.."
-    }
+	"Reconnect"
+	{
+		"es"		"Serás reconectado al servidor en 3 segundos."
+	}
 
-    "Reconnect2"
-    {
-        "es"    "{blue}[{default}Reconnect{blue}] {default}Veras una pantalla negra en lugar de la barra de carga!"
-    }
+	"CasterReconnect"
+	{
+		"es"		"Reconéctate para aplicar la configuración de addons de caster."
+	}
 
-    "UnregCasterTarget"
-    {
-        "#format"    "{1:N}"
-        "es"    "{default}[{olive}!{default}] {default}Tu registro como caster fue removido por {blue}Admin {default}({olive}{1}{default})"
-    }
+	"CasterPlay"
+	{
+		"es"		"Debes dejar de ser caster antes de jugar."
+	}
 
-    "KickSpecsAdmin"
-    {
-        "#format"    "{1:N}"
-        "es"    "[{green}!{default}] {blue}Los espectadores {default}fueron expulsados por {blue}Admin {default}({olive}{1}{default})"
-    }
+	"UseNoCast"
+	{
+		"es"		"Usa {green}!uncast{default} para dejar de ser caster."
+	}
 
-    "KickSpecsVoteSpec"
-    {
-        "es"    "[{olive}Cast{default}] {blue}Los espectadores {default}no pueden iniciar una votacion para {green}expulsar specs{default}."
-    }
+	"AuthIdError"
+	{
+		"#format"	"{1:s}"
+		"es"		"No se pudo obtener un Steam AccountID válido ({1}). Espera a que el jugador termine de conectarse."
+	}
 
-    "VoteInProgress"
-    {
-        "es"    "[{olive}Cast{default}] Hay {olive}una votacion {green}en progreso{default}."
-    }
+	"CasterFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} ya está registrado como caster."
+	}
 
-    "VoteDelay"
-    {
-        "#format"    "{1:d}"
-        "es"    "[{olive}Cast{default}] Espera {blue}{1}s {default}para iniciar otra votacion."
-    }
+	"CasterReg"
+	{
+		"#format"	"{1:s}"
+		"es"		"Se registró a {1} como caster."
+	}
 
-    "ForbidAddons"
-    {
-        "es"    "{blue}[{default}!{blue}] {default}Los addons ahora estan {green}prohibidos {default}para los casters."
-    }
+	"CasterRegFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"El admin {1} te registró como caster."
+	}
 
-    "AllowAddons"
-    {
-        "es"    "{blue}[{default}!{blue}] {default}Los addons ahora estan {green}permitidos {default}para los casters."
-    }
+	"CasterRegError"
+	{
+		"#format"	"{1:d}"
+		"es"		"No se pudo registrar el AccountID {1} como caster."
+	}
 
-    "CasterCheck1"
-    {
-        "es"    "{default}<{olive}Cast{default}> Debes salir del modo caster antes de jugar."
-    }
+	"WhitelistFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} ya está en la lista de permitidos para caster."
+	}
 
-    "CasterCheck2"
-    {
-        "es"    "{default}<{olive}Cast{default}> Usa {green}!notcasting {default}/ {green}!uncast"
-    }
+	"WhitelistReg"
+	{
+		"#format"	"{1:s}"
+		"es"		"Se agregó a {1} a la lista de permitidos para caster."
+	}
 
-    "RegCasterReply"
-    {
-        "#format"    "{1:N}"
-        "es"    "Se registro a {1} como caster"
-    }
+	"WhitelistRegFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"El admin {1} te agregó a la lista de permitidos para caster."
+	}
 
-    "CasterSteamIDError"
-    {
-        "es"    "No se pudo encontrar el Steam ID. Revisa si hay errores y espera a que el jugador termine de conectarse."
-    }
+	"WhitelistRegError"
+	{
+		"#format"	"{1:d}"
+		"es"		"No se pudo agregar el AccountID {1} a la lista de permitidos para caster."
+	}
 
-    "UnregCasterNonAdmin"
-    {
-        "es"    "Solo los admins pueden quitar a otros casters. Usa sm_notcasting sin argumentos si quieres quitarte a ti mismo."
-    }
+	"MenuPlayersList"
+	{
+		"es"		"Selecciona un jugador para registrar:"
+	}
 
-    "UnregCasterSuccess"
-    {
-        "#format"    "{1:N}"
-        "es"    "{1} ya no es caster"
-    }
+	"ListPrinted"
+	{
+		"es"		"La lista se ha mostrado en tu consola."
+	}
 
-    "CasterDBReset"
-    {
-        "es"    "[casters_database] Reiniciado correctamente"
-    }
+	"CasterReset"
+	{
+		"es"		"Se ha vaciado la lista de casters."
+	}
 
-    "CasterDBAdd"
-    {
-        "#format"    "{1:s}"
-        "es"    "[casters_database] Agregado '{1}'"
-    }
+	"CasterNoFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} no está registrado como caster."
+	}
 
-    "CasterDBRemove"
-    {
-        "#format"    "{1:s}"
-        "es"    "[casters_database] Removido '{1}'"
-    }
+	"CasterRemove"
+	{
+		"#format"	"{1:s}"
+		"es"		"Se eliminó a {1} de la lista de casters."
+	}
 
-    "CasterDBFound"
-    {
-        "#format"    "{1:s}"
-        "es"    "[casters_database] '{1}' ya existe"
-    }
+	"CasterRemoveFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"El admin {1} te eliminó de la lista de casters."
+	}
 
-    "CasterDBError"
-    {
-        "es"    "[casters_database] No se especificaron argumentos / buffer vacio"
-    }
+	"CasterRemoveError"
+	{
+		"#format"	"{1:d}"
+		"es"		"No se pudo eliminar el AccountID {1} de la lista de casters."
+	}
 
-    "KickSpecsVoteTitle"
-    {
-        "es"    "Expulsar espectadores que no sean admin ni caster?"
-    }
+	"WhitelistNoFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} no está en la lista de permitidos para caster."
+	}
 
-    "KickSpecsVoteSuccess"
-    {
-        "es"    "Adios espectadores!"
-    }
+	"WhitelistRemove"
+	{
+		"#format"	"{1:s}"
+		"es"		"Se eliminó a {1} de la lista de permitidos para caster."
+	}
 
-    "KickSpecsReason"
-    {
-        "es"    "No se permiten espectadores, por favor!"
-    }
+	"WhitelistRemoveFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"El admin {1} te eliminó de la lista de permitidos para caster."
+	}
+
+	"WhitelistRemoveError"
+	{
+		"#format"	"{1:d}"
+		"es"		"No se pudo eliminar el AccountID {1} de la lista de permitidos para caster."
+	}
+
+	"MenuCastersList"
+	{
+		"es"		"Selecciona un caster para eliminar:"
+	}
+
+	"MenuWhitelistList"
+	{
+		"es"		"Selecciona un jugador para eliminar de la lista de permitidos:"
+	}
+
+	"NoTargetsToRemove"
+	{
+		"es"		"No hay jugadores disponibles para eliminar."
+	}
+
+	"WhitelistReset"
+	{
+		"es"		"Se ha vaciado la lista de permitidos para caster."
+	}
+
+	"SelfRegNoAdmin"
+	{
+		"es"		"Solo los admins pueden registrar a otros jugadores como casters."
+	}
+
+	"SelfRegDisabled"
+	{
+		"es"		"El registro de uno mismo como caster está deshabilitado."
+	}
+
+	"WhitelistEmpty"
+	{
+		"es"		"La lista de permitidos para caster está vacía. Contacta a un admin para registrarte."
+	}
+
+	"SelfRegWhitelistNotFound"
+	{
+		"es"		"Debes estar en la lista de permitidos para caster para registrarte. Contacta a un admin."
+	}
+
+	"SelfRegCasterFound"
+	{
+		"es"		"Ya estás registrado como caster."
+	}
+
+	"SelfRegSuccess"
+	{
+		"es"		"Te has registrado como caster."
+	}
+
+	"CasterEmpty"
+	{
+		"es"		"La lista de casters está vacía."
+	}
+
+	"UnRegCasterNonAdmin"
+	{
+		"es"		"Solo los admins pueden quitar a otros casters. Usa !uncast sin argumentos para quitarte a ti mismo."
+	}
+
+	"KickSpecsAdmin"
+	{
+		"#format"	"{1:N}"
+		"es"		"Los espectadores fueron expulsados por el admin {1}."
+	}
+
+	"KickSpecsVoteSpec"
+	{
+		"es"		"Los espectadores no pueden iniciar una votación para expulsar espectadores."
+	}
+
+	"VoteInProgress"
+	{
+		"es"		"Ya hay una votación en progreso."
+	}
+
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"es"		"Espera {1} segundos antes de iniciar otra votación."
+	}
+
+	"KickSpecsVoteTitle"
+	{
+		"es"		"¿Expulsar espectadores sin admin, caster ni inmunidad de espectador?"
+	}
+
+	"KickSpecsVoteSuccess"
+	{
+		"es"		"Los espectadores serán expulsados."
+	}
+
+	"KickSpecsReason"
+	{
+		"es"		"Los espectadores fueron expulsados por un admin o una votación aprobada."
+	}
 }

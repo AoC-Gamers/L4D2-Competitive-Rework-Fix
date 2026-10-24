@@ -79,7 +79,7 @@ public void OnPluginStart()
 	g_smSpecImmunity	 = new StringMap();
 
 	g_cvDebug			 = CreateConVar("caster_debug", "0", "Enable caster system debug logging", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_cvWhitelistEnable	 = CreateConVar("caster_whitelist", "1", "Enable Whitelist, if deactivated, everyone will be able to register as a caster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_cvWhitelistEnable	 = CreateConVar("caster_whitelist", "0", "Enable Whitelist, if deactivated, everyone will be able to register as a caster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_cvSefRegEnable	 = CreateConVar("caster_selfreg", "1", "Enables self-registration, it is limited to the user being registered on the whitelist.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_cvKickSpecImmunity = CreateConVar("caster_kickspecs_immunity", "1", "Enable kick spec immunity", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_cvAddonsEnable	 = CreateConVar("caster_addons", "1", "Enable caster addons", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -1078,7 +1078,7 @@ Action aSelfRegCastCmd(int iClient, int iArgs)
 	GetClientAccountIDString(iClient, szAuthId, sizeof(szAuthId));
 	int accountId = StringToInt(szAuthId);
 
-	if (g_cvWhitelistEnable)
+	if (g_cvWhitelistEnable.BoolValue)
 	{
 		if (g_smWhitelist.Size == 0 && !bIsAdmin)
 		{

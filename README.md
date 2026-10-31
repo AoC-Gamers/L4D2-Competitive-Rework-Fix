@@ -46,8 +46,9 @@ Actualmente:
 
 ## Build Local
 
-La copia de `steamidtools_stock.inc` corresponde a SteamIDTools 2.5.0 y ofrece
-conversiones locales de identidad sin requerir el plugin proveedor.
+Las copias de `steamidtools.inc` y `steamidtools/` corresponden a SteamIDTools
+4.0.0. Caster importa conversiones puras y adaptadores de clientes, sin plugin
+proveedor; no se distribuye el antiguo include stock.
 
 Targets disponibles:
 

@@ -1,17 +1,16 @@
 /*
-	steamidtools_stock.inc
+	steamidtools.inc
 	Copyright (C) 2025 AoC-Gamers
 */
 
-#if defined _steamidtools_stock_included
+#if defined _steamidtools_included
 	#endinput
 #endif
-#define _steamidtools_stock_included
+#define _steamidtools_included
 
 #include <sourcemod>
-#include <clients>
 
-#define STEAMIDTOOLS_VERSION "2.5.0"
+#define STEAMIDTOOLS_VERSION "4.0.0"
 
 #define ACCOUNTID_LENGTH	   16
 #define STEAMID64_EXACT_LENGTH 17
@@ -620,90 +619,6 @@ stock bool SteamID3ToSteamID2(const char[] szSteamId3, char[] szBuffer, int iMax
 	}
 
 	return AccountIDToSteamID2(iAccountId, szBuffer, iMaxlen);
-}
-
-/**
- * Gets the AccountID of a connected client
- *
- * @param iClient       Client index
- * @return              AccountID, or 0 if invalid
- */
-stock int GetClientAccountID(int iClient)
-{
-	if (!IsValidClientIndex(iClient) || !IsClientInGame(iClient))
-	{
-		return 0;
-	}
-
-	return GetSteamAccountID(iClient);
-}
-
-/**
- * Finds the client index by their Steam Account ID.
- *
- * @param iAccountId	Steam Account ID to search for.
- * @return				Client index (1-based) if found,
- *                      0 if the provided Account ID is invalid,
- *                      or -1 if no matching client is found.
- */
-stock int FindClientByAccountID(int iAccountId)
-{
-	if (iAccountId == 0)
-	{
-		return 0;
-	}
-
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsValidClientIndex(i) || !IsClientInGame(i))
-		{
-			continue;
-		}
-
-		if (GetSteamAccountID(i) != iAccountId)
-		{
-			continue;
-		}
-
-		return i;
-	}
-
-	return -1;
-}
-
-/**
- * Finds a client by SteamID2
- *
- * @param szSteamId2    SteamID2 to search for
- * @return              Client index, or 0 if not found
- */
-stock int FindClientBySteamID2(const char[] szSteamId2)
-{
-	int iAccountId = SteamID2ToAccountID(szSteamId2);
-	return FindClientByAccountID(iAccountId);
-}
-
-/**
- * Finds a client by SteamID3
- *
- * @param szSteamId3    SteamID3 to search for
- * @return              Client index, or 0 if not found
- */
-stock int FindClientBySteamID3(const char[] szSteamId3)
-{
-	int iAccountId = SteamID3ToAccountID(szSteamId3);
-	return FindClientByAccountID(iAccountId);
-}
-
-/**
- * Validates if a client index is valid (internal helper)
- *
- * @param iClient       Client index
- * @return              true if valid, false otherwise
- */
-stock bool IsValidClientIndex(int iClient)
-{
-	return (iClient > 0 && iClient <= MaxClients);
 }
 
 /**

@@ -7,7 +7,8 @@
 #include <builtinvotes>
 #include <colors>
 #include <left4dhooks>
-#include <steamidtools_stock>
+#include <steamidtools>
+#include <steamidtools/clients>
 
 enum eTypeAction
 {

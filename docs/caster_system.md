@@ -19,7 +19,7 @@ Cambios principales:
 - fuente principal
 - include público alineado con la API actual del plugin
 - override local de traducción en español
-- incorporación de `steamidtools_stock.inc` para normalizar identificadores Steam
+- uso de `steamidtools.inc` y `steamidtools/clients.inc` para normalizar identidades y resolver clientes
 - API pública simplificada para trabajar solo con `int accountId`
 - `AccountID` como identificador interno y externo por defecto para caster, whitelist e inmunidad de spec
 - soporte más flexible para registro/remoción por SteamID2, SteamID3 y AccountID
@@ -111,5 +111,5 @@ Los comandos de registro/remoción ya no abren menús cuando se ejecutan sin arg
 - `specrates` y el panel de `readyup` consultan `bCaster(accountId, CasterSystemAction_Get)` tras comprobar la biblioteca y que el AccountID sea mayor que cero
 - las fuentes migradas de `caster_assister`, `specrates` y `readyup` en el repo base también requieren el proveedor de este override en ejecución; el proveedor original del base conserva su API antigua
 - el include del base declara `bCaster` y `CasterSystemAction` para compilar sus consumidores con sus propios includes; sus declaraciones legacy se conservan para documentar el contrato del proveedor original
-- el include ya no importa `steamidtools_stock.inc`, porque la API pública recibe AccountID y no convierte identificadores Steam
+- el include publico no importa `steamidtools.inc`, porque la API pública recibe AccountID y no convierte identificadores Steam
 - si en el futuro se agregan fixes locales concretos, deben documentarse aquí
